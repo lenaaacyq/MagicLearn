@@ -165,7 +165,7 @@ def call_kimi(base_url: str, api_key: str, prompt: str) -> str:
         return data["choices"][0]["message"]["content"].strip()
 
 
-def parse_records_from_text(text: str) -> list[dict[str, Any]]:
+def parse_records_with_source(text: str) -> tuple[list[dict[str, Any]], str]:
     api_key = os.environ.get("MOONSHOT_API_KEY", "").strip()
     base_url = os.environ.get("MOONSHOT_BASE_URL", "https://api.moonshot.cn/v1")
     if api_key:
@@ -185,7 +185,12 @@ def parse_records_from_text(text: str) -> list[dict[str, Any]]:
                     records = [normalize_record(item) for item in data if isinstance(item, dict)]
                     filtered = [record for record in records if record and record.get("text")]
                     if filtered:
-                        return filtered
+                        return filtered, "moonshot"
         except Exception:
             pass
-    return parse_blocks(text)
+    return parse_blocks(text), "rules"
+
+
+def parse_records_from_text(text: str) -> list[dict[str, Any]]:
+    records, _source = parse_records_with_source(text)
+    return records

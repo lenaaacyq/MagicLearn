@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getQuestionItems } from "../../data/questionBank";
+import { markQuestionComplete } from "../../data/progressStore";
 
 interface ListeningQuestionProps {
   onComplete: () => void;
@@ -263,6 +264,8 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
   };
 
   const handleNext = () => {
+    if (!current) return;
+    markQuestionComplete("listening", current.id);
     if (currentIndex < total - 1) {
       setCurrentIndex((prev) => prev + 1);
       return;
@@ -382,7 +385,7 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
         <AnimatePresence>
           {showToast && (
             <motion.div
-              className="absolute top-24 left-1/2 -translate-x-1/2 px-6 py-3 rounded-full glass-panel text-base"
+              className="absolute top-24 inset-x-0 flex justify-center px-6 py-3 rounded-full glass-panel text-base"
               initial={{ opacity: 0, y: -10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Mail, MessageCircle } from "lucide-react";
+import { Mail, MessageCircle, Sparkles } from "lucide-react";
 
 export default function AIFeedbackBar() {
   return (
@@ -13,8 +13,8 @@ export default function AIFeedbackBar() {
     >
       <div className="max-w-6xl mx-auto px-8 flex items-center justify-between text-xs text-[var(--muted-foreground)]">
         <div className="flex items-center gap-2 pointer-events-auto">
-          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[var(--neon-gold)]/60 to-[var(--mystical-purple)]/60 flex items-center justify-center text-[10px] font-bold backdrop-blur-sm">
-            ML
+          <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[var(--neon-gold)]/60 to-[var(--mystical-purple)]/60 flex items-center justify-center backdrop-blur-sm">
+            <Sparkles className="w-3.5 h-3.5 text-white/90" />
           </div>
           <span className="text-xs">
             MagicLearn Platform · AI-native English Learning
@@ -22,15 +22,10 @@ export default function AIFeedbackBar() {
         </div>
 
         <div className="flex items-center gap-4 pointer-events-auto">
-          <a
-            href="https://t.me/YOUR_TELEGRAM_USERNAME"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1.5 hover:text-[var(--neon-gold)] transition-colors"
-          >
+          <div className="flex items-center gap-1.5">
             <MessageCircle className="w-3.5 h-3.5" />
-            <span>Telegram: @YOUR_USERNAME</span>
-          </a>
+            <span>Wechat ID: Qb876590</span>
+          </div>
 
           <div className="flex items-center gap-1.5">
             <Mail className="w-3.5 h-3.5" />

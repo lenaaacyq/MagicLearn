@@ -11,7 +11,13 @@ from typing import Optional
 
 from .content_transformer import transform_records
 from .db import create_tts_job, get_tts_job, init_db, insert_knowledge, list_comparison, update_tts_job
-from .knowledge_parser import extract_image_text, extract_pdf_ocr_text, extract_pdf_text, parse_records_from_text
+from .knowledge_parser import (
+    extract_image_text,
+    extract_pdf_ocr_text,
+    extract_pdf_text,
+    parse_records_from_text,
+    parse_records_with_source,
+)
 from .tts_service import poll_tts_job, submit_tts_job
 
 app = FastAPI(title="EduPal Agent API")
@@ -144,13 +150,13 @@ def upload_knowledge_file(file: UploadFile = File(...)):
             raise HTTPException(status_code=400, detail=str(error)) from error
     if not text:
         raise HTTPException(status_code=400, detail="未能解析出文本内容，请确认文件清晰可读")
-    records = parse_records_from_text(text)
+    records, source = parse_records_with_source(text)
     if not records:
         raise HTTPException(status_code=400, detail="未提取到可入库的题目")
     if len(records) > max_records:
         raise HTTPException(status_code=400, detail="解析题目数量超出上限")
     ids = insert_knowledge(records)
-    return {"received": len(ids), "ids": ids, "records": records}
+    return {"received": len(ids), "ids": ids, "records": records, "source": source}
 
 
 @app.post("/api/knowledge-base/transform")

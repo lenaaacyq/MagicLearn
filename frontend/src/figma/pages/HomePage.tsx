@@ -23,12 +23,17 @@ export default function HomePage() {
         </div>
 
         <div className="flex items-center gap-4">
-          <Link
-            href="/admin"
-            className="px-4 py-2 glass-panel rounded-2xl text-sm hover:bg-white/10 transition-colors"
-          >
-            管理后台
-          </Link>
+          <div className="relative group">
+            <span
+              className="px-4 py-2 glass-panel rounded-2xl text-sm opacity-60 cursor-not-allowed"
+              aria-disabled="true"
+            >
+              管理后台
+            </span>
+            <div className="absolute top-full left-1/2 -translate-x-1/2 mt-2 whitespace-nowrap rounded-lg bg-[var(--mystical-navy)]/90 px-3 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 pointer-events-none">
+              维护中，暂不可用
+            </div>
+          </div>
           <button className="w-10 h-10 glass-panel rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors">
             <Settings className="w-5 h-5" />
           </button>

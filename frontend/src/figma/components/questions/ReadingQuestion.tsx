@@ -5,6 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { getQuestionItems } from "../../data/questionBank";
+import { markQuestionComplete } from "../../data/progressStore";
 
 interface ReadingQuestionProps {
   onComplete: () => void;
@@ -134,6 +135,8 @@ export default function ReadingQuestion({ onComplete }: ReadingQuestionProps) {
   };
 
   const handleNext = () => {
+    if (!current) return;
+    markQuestionComplete("reading", current.id);
     if (currentIndex < total - 1) {
       setCurrentIndex((prev) => prev + 1);
       return;

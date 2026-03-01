@@ -1,8 +1,11 @@
 "use client";
 
+import { useEffect, useMemo, useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Flame, Lock, Volume2, Wand2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { getQuestionItems } from "../data/questionBank";
+import { getProgressPercent } from "../data/progressStore";
 
 interface QuestCardProps {
   title: string;
@@ -93,6 +96,18 @@ function QuestCard({
 
 export default function QuestBoard() {
   const router = useRouter();
+  const listeningTotal = useMemo(() => getQuestionItems("listening").length, []);
+  const grammarTotal = useMemo(() => getQuestionItems("grammar").length, []);
+  const readingTotal = useMemo(() => getQuestionItems("reading").length, []);
+  const [progress, setProgress] = useState({ listening: 0, grammar: 0, reading: 0 });
+
+  useEffect(() => {
+    setProgress({
+      listening: getProgressPercent("listening", listeningTotal),
+      grammar: getProgressPercent("grammar", grammarTotal),
+      reading: getProgressPercent("reading", readingTotal)
+    });
+  }, [listeningTotal, grammarTotal, readingTotal]);
 
   const handleQuestClick = (questionType: string) => {
     router.push(`/question/${questionType}`);
@@ -124,7 +139,6 @@ export default function QuestBoard() {
         <div className="relative z-10">
           <h2 className="text-2xl mb-4 flex items-baseline gap-3" style={{ fontFamily: "var(--font-serif)" }}>
             <span>The Prophecy Daily</span>
-            <span className="text-sm text-[var(--muted-foreground)]">预言日报</span>
           </h2>
 
           <div className="flex items-center gap-8">
@@ -132,20 +146,14 @@ export default function QuestBoard() {
               <div className="w-12 h-12 rounded-xl bg-[var(--neon-gold)]/20 flex items-center justify-center">
                 <Flame className="w-6 h-6 text-[var(--neon-gold)]" />
               </div>
-              <div>
-                <p className="text-xs text-[var(--muted-foreground)]">战绩</p>
-                <p className="text-lg font-semibold text-[var(--neon-gold)]">7 天连胜</p>
-              </div>
+              <p className="text-lg font-semibold text-[var(--neon-gold)]">7 天连胜</p>
             </div>
 
             <div className="flex items-center gap-3">
               <div className="w-12 h-12 rounded-xl bg-[var(--mystical-purple)]/20 flex items-center justify-center">
                 <Wand2 className="w-6 h-6 text-[var(--mystical-purple)]" />
               </div>
-              <div>
-                <p className="text-xs text-[var(--muted-foreground)]">勋章</p>
-                <p className="text-lg font-semibold text-[var(--mystical-purple)]">大魔法师</p>
-              </div>
+              <p className="text-lg font-semibold text-[var(--mystical-purple)]">大魔法师</p>
             </div>
           </div>
         </div>
@@ -158,6 +166,7 @@ export default function QuestBoard() {
           icon={<Volume2 className="w-6 h-6 text-[var(--mystical-purple)]" />}
           status="active"
           glowColor="var(--mystical-purple)"
+          progress={progress.listening}
           onClick={() => handleQuestClick("listening")}
         />
 
@@ -167,7 +176,7 @@ export default function QuestBoard() {
           icon={<Wand2 className="w-6 h-6 text-[var(--emerald-green)]" />}
           status="progress"
           glowColor="var(--emerald-green)"
-          progress={65}
+          progress={progress.grammar}
           onClick={() => handleQuestClick("grammar")}
         />
 
@@ -177,7 +186,7 @@ export default function QuestBoard() {
           icon={<BookOpen className="w-6 h-6 text-[var(--neon-gold)]" />}
           status="progress"
           glowColor="var(--neon-gold)"
-          progress={40}
+          progress={progress.reading}
           onClick={() => handleQuestClick("reading")}
         />
       </div>

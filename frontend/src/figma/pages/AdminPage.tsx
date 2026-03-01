@@ -26,10 +26,12 @@ type ParsedRecord = {
 };
 
 export default function AdminPage() {
+  const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [parseSource, setParseSource] = useState("");
 
   const [parsedData, setParsedData] = useState<DataRow[]>([]);
 
@@ -44,10 +46,11 @@ export default function AdminPage() {
     }
     setIsUploading(true);
     setUploadError(null);
+    setParseSource("");
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch("/api/knowledge-base/upload-file", {
+      const response = await fetch(`${apiBase}/api/knowledge-base/upload-file`, {
         method: "POST",
         body: formData
       });
@@ -74,6 +77,7 @@ export default function AdminPage() {
         };
       });
       setParsedData(rows);
+      setParseSource(typeof data.source === "string" ? data.source : "");
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "上传解析失败");
     } finally {
@@ -91,11 +95,11 @@ export default function AdminPage() {
   };
 
   const [originalExample] = useState(
-    'Complete the sentence: "The old wizard ____ in the castle for many years."'
+    "Sample: The teacher asked Tom to read the story in the library after class."
   );
 
   const [transformedExample] = useState(
-    '🔮 古老魔法任务：解锁城堡秘密\n\n传说在迷雾缭绕的魔法城堡深处，一位睿智的老巫师守护着古老的魔法知识。请帮助揭开这个咒语的秘密：\n\n"The old wizard ____ in the castle for many years."\n\n💡 提示：注意时态的魔法规则，这位巫师已经在城堡中生活了很久很久...\n\n完成此任务，你将获得 50 魔法币和 "时态大师" 称号！'
+    "Sample: Professor Willow asked Leo to read the spellbook in the Crystal Library after class at Arcane Academy."
   );
 
   return (
@@ -128,22 +132,11 @@ export default function AdminPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
-            <Link
-              href="/"
-              className="px-4 py-2 glass-panel rounded-2xl text-sm hover:bg-white/10 transition-colors"
-            >
-              返回用户页
-            </Link>
-            <div className="px-4 py-2 glass-panel rounded-2xl text-sm">
-              <span className="text-[var(--muted-foreground)]">环境：</span>
-              <span className="ml-2 text-[var(--emerald-green)]">Production</span>
-            </div>
-          </div>
+          <div />
         </div>
       </motion.header>
 
-      <div className="grid grid-cols-[1.1fr_0.9fr] gap-4">
+      <div className="grid grid-cols-[1.1fr_0.9fr] gap-4 -mt-2.5">
         <motion.div
           className="flex flex-col gap-4"
           initial={{ opacity: 0, x: -30 }}
@@ -184,10 +177,15 @@ export default function AdminPage() {
               <span className="text-sm text-[var(--emerald-green)]">
                 已解析 {parsedData.length} 条数据
               </span>
+              {parseSource ? (
+                <span className="ml-auto px-2 py-1 text-[10px] rounded-full bg-white/10 text-[var(--muted-foreground)] border border-white/10">
+                  {parseSource === "moonshot" ? "Kimi 抽取" : "规则抽取"}
+                </span>
+              ) : null}
             </div>
           </div>
 
-          <div className="flex-1 glass-panel rounded-3xl p-5 overflow-hidden flex flex-col">
+          <div className="glass-panel rounded-3xl p-5 overflow-hidden flex flex-col h-[360px]">
             <h4 className="text-sm font-semibold mb-4 text-[var(--muted-foreground)]">
               解析结果预览
             </h4>
@@ -346,12 +344,12 @@ export default function AdminPage() {
                   >
                     <Sparkles className="w-5 h-5" />
                   </motion.span>
-                  魔法世界构建中...
+                  魔法题库构建中...
                 </span>
               ) : (
                 <span className="relative z-10 flex items-center gap-2">
                   <Sparkles className="w-5 h-5" />
-                  生成 AI 多模态资产
+                  构建属于你的魔法题库
                 </span>
               )}
             </motion.button>
