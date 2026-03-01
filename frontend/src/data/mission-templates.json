@@ -1,0 +1,85 @@
+{
+  "meta": {
+    "version": "0.1.0",
+    "academy": "魔法学院"
+  },
+  "missions": [
+    {
+      "id": "mission-grammar",
+      "title": "咒语铸造工坊",
+      "theme": "语法试炼",
+      "type": "grammar",
+      "characters": ["Merlin"],
+      "steps": [
+        {
+          "id": "intro",
+          "title": "导师引导",
+          "prompt": "Merlin 将引导你完成语法试炼。"
+        },
+        {
+          "id": "question",
+          "title": "咒语填空",
+          "prompt": "请从选项中选择正确的咒语。"
+        },
+        {
+          "id": "feedback",
+          "title": "导师点评",
+          "prompt": "Merlin 会解释正确答案与规则。"
+        }
+      ]
+    },
+    {
+      "id": "mission-reading",
+      "title": "魔法卷轴解读室",
+      "theme": "阅读任务",
+      "type": "reading",
+      "characters": ["Merlin", "Luna"],
+      "steps": [
+        {
+          "id": "intro",
+          "title": "任务背景",
+          "prompt": "Luna 将带你解读古老卷轴。"
+        },
+        {
+          "id": "question",
+          "title": "卷轴问答",
+          "prompt": "阅读文本后选择正确答案。"
+        },
+        {
+          "id": "feedback",
+          "title": "重点回顾",
+          "prompt": "导师提示关键线索。"
+        }
+      ]
+    },
+    {
+      "id": "mission-listening",
+      "title": "学院密语会议",
+      "theme": "听力试炼",
+      "type": "listening",
+      "characters": ["Merlin", "Luna", "学院角色"],
+      "steps": [
+        {
+          "id": "intro",
+          "title": "对话预告",
+          "prompt": "聆听学院密语对话，捕捉关键信息。"
+        },
+        {
+          "id": "listen",
+          "title": "对话播放",
+          "prompt": "播放角色对话音频。"
+        },
+        {
+          "id": "question",
+          "title": "听力问答",
+          "prompt": "根据对话回答问题。"
+        },
+        {
+          "id": "feedback",
+          "title": "导师总结",
+          "prompt": "Merlin 讲解答案与听力策略。"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,626 @@
+{
+  "meta": {
+    "version": "0.1.0",
+    "language": "zh",
+    "source": "demo-fixed",
+    "schema": "grouped-material"
+  },
+  "groups": [
+  {
+    "id": "group-listening-001",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-01.mp3",
+        "duration": 15
+      },
+      "transcript": "W: Excuse me, can you tell me the way to the nearest bank?\nM: Sure. Go down this street and turn right at the second crossing, the bank is on your left.",
+      "dialogue": [
+        { "role": "W", "text": "Excuse me, can you tell me the way to the nearest bank?" },
+        { "role": "M", "text": "Sure. Go down this street and turn right at the second crossing, the bank is on your left." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q1",
+        "stem": "Where does the woman want to go?",
+        "options": ["To a post office.", "To a bank.", "To a library."],
+        "answer": "To a bank.",
+        "analysis": "细节题。女士问：“can you tell me the way to the nearest bank?”，想去银行。",
+        "tags": ["listening", "detail", "location"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-002",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-02.mp3",
+        "duration": 12
+      },
+      "transcript": "M: How did your mother go to Beijing this morning, Cathy?\nW: She flew there.",
+      "dialogue": [
+        { "role": "M", "text": "How did your mother go to Beijing this morning, Cathy?" },
+        { "role": "W", "text": "She flew there." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q2",
+        "stem": "How did Cathy’s mother get to Beijing?",
+        "options": ["By plane.", "By train.", "By car."],
+        "answer": "By plane.",
+        "analysis": "细节题。回答为：“She flew there.”（乘飞机）。",
+        "tags": ["listening", "detail", "transportation"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-003",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-03.mp3",
+        "duration": 10
+      },
+      "transcript": "W: How long have you been a doctor in this hospital?\nM: I've been here for about six years.",
+      "dialogue": [
+        { "role": "W", "text": "How long have you been a doctor in this hospital?" },
+        { "role": "M", "text": "I've been here for about six years." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q3",
+        "stem": "When did the man come to the hospital?",
+        "options": ["About four years ago.", "About five years ago.", "About six years ago."],
+        "answer": "About six years ago.",
+        "analysis": "细节题。男士说：“I've been here for about six years.”",
+        "tags": ["listening", "detail", "time"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-004",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-04.mp3",
+        "duration": 10
+      },
+      "transcript": "M: How often do you visit your grandparents?\nW: I visit my grandparents every Saturday.",
+      "dialogue": [
+        { "role": "M", "text": "How often do you visit your grandparents?" },
+        { "role": "W", "text": "I visit my grandparents every Saturday." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q4",
+        "stem": "How often does the girl visit her grandparents?",
+        "options": ["Once a week.", "Twice a week.", "Once a month."],
+        "answer": "Once a week.",
+        "analysis": "细节题。女孩说：“I visit my grandparents every Saturday.”（每周六，即一周一次）。",
+        "tags": ["listening", "detail", "frequency"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-005",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-05.mp3",
+        "duration": 12
+      },
+      "transcript": "W: I would like to find a job in Hong Kong after graduation. How about you?\nM: I won't go there. I don't like places which are too crowded.",
+      "dialogue": [
+        { "role": "W", "text": "I would like to find a job in Hong Kong after graduation. How about you?" },
+        { "role": "M", "text": "I won't go there. I don't like places which are too crowded." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q5",
+        "stem": "Why doesn't the man like Hong Kong?",
+        "options": ["Because it's crowded.", "Because it's small.", "Because it's boring."],
+        "answer": "Because it's crowded.",
+        "analysis": "细节题。男士提到不想去香港的原因是：“I don't like places which are too crowded.”",
+        "tags": ["listening", "detail", "reason"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-006",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-06.mp3",
+        "duration": 25
+      },
+      "transcript": "M: Did you go to Wanda Cinema last night?\nW: Yes, I did. That film was very sad. It made a lot of people cry.\nM: I went to see the film, too. But the film didn't make me cry. It just made me leave.\nW: Really? What did you do then?\nM: I visited my grandma. She was happy to see me.",
+      "dialogue": [
+        { "role": "M", "text": "Did you go to Wanda Cinema last night?" },
+        { "role": "W", "text": "Yes, I did. That film was very sad. It made a lot of people cry." },
+        { "role": "M", "text": "I went to see the film, too. But the film didn't make me cry. It just made me leave." },
+        { "role": "W", "text": "Really? What did you do then?" },
+        { "role": "M", "text": "I visited my grandma. She was happy to see me." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q6",
+        "stem": "What did the boy think of the movie?",
+        "options": ["He thought it was boring.", "He thought it was moving.", "He thought it was sad."],
+        "answer": "He thought it was boring.",
+        "analysis": "推断题。男孩说：“the film didn't make me cry. It just made me leave.” 没看下去就走了，说明他觉得无聊（boring）。",
+        "tags": ["listening", "inference", "attitude"]
+      },
+      {
+        "id": "listening-q7",
+        "stem": "What did the boy do then?",
+        "options": ["He went back home.", "He went to see his grandpa.", "He visited his grandma."],
+        "answer": "He visited his grandma.",
+        "analysis": "细节题。男士接着说自己离场后：“I visited my grandma.”",
+        "tags": ["listening", "detail", "action"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-007",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-07.mp3",
+        "duration": 30
+      },
+      "transcript": "M: Lisa, are you OK?\nW: I have a headache and I can't move my neck. What should I do? Should I take my temperature?\nM: No, it doesn't sound like you have a fever. What did you do last weekend?\nW: I played computer games all weekend.\nM: That's probably the reason. You need to take breaks away from the computer.\nW: Thanks for your advice. I think I'd better use my computer less.",
+      "dialogue": [
+        { "role": "M", "text": "Lisa, are you OK?" },
+        { "role": "W", "text": "I have a headache and I can't move my neck. What should I do? Should I take my temperature?" },
+        { "role": "M", "text": "No, it doesn't sound like you have a fever. What did you do last weekend?" },
+        { "role": "W", "text": "I played computer games all weekend." },
+        { "role": "M", "text": "That's probably the reason. You need to take breaks away from the computer." },
+        { "role": "W", "text": "Thanks for your advice. I think I'd better use my computer less." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q8",
+        "stem": "What's wrong with Lisa?",
+        "options": ["She has a fever.", "She can't move her leg.", "She has a headache."],
+        "answer": "She has a headache.",
+        "analysis": "细节题。Lisa原话为：“I have a headache and I can't move my neck.”",
+        "tags": ["listening", "detail", "health"]
+      },
+      {
+        "id": "listening-q9",
+        "stem": "What did the man advise Lisa to do first?",
+        "options": ["Go to the doctor.", "Lie down and have a rest.", "Stop using the computer."],
+        "answer": "Stop using the computer.",
+        "analysis": "细节题。男士建议：“You need to take breaks away from the computer.”",
+        "tags": ["listening", "detail", "advice"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-008",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-08.mp3",
+        "duration": 30
+      },
+      "transcript": "M: Excuse me. I want to change the T-shirt bought yesterday.\nW: But you should tell me what the problem is.\nM: It's too small. I have to get a bigger one.\nW: No problem. I'll get a new T-shirt for you.\nM: Wait a minute. My son doesn't look good in green. Do you have a black T-shirt?\nW: Sorry, the black ones have been sold out. Is it OK for you to wait for two or three days?\nM: All right.",
+      "dialogue": [
+        { "role": "M", "text": "Excuse me. I want to change the T-shirt bought yesterday." },
+        { "role": "W", "text": "But you should tell me what the problem is." },
+        { "role": "M", "text": "It's too small. I have to get a bigger one." },
+        { "role": "W", "text": "No problem. I'll get a new T-shirt for you." },
+        { "role": "M", "text": "Wait a minute. My son doesn't look good in green. Do you have a black T-shirt?" },
+        { "role": "W", "text": "Sorry, the black ones have been sold out. Is it OK for you to wait for two or three days?" },
+        { "role": "M", "text": "All right." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q10",
+        "stem": "Why does the man go to the store?",
+        "options": ["He wants to buy a T-shirt.", "He wants to change the T-shirt.", "He wants to have a fight."],
+        "answer": "He wants to change the T-shirt.",
+        "analysis": "细节题。男士说：“I want to change the T-shirt bought yesterday.”（想换T恤）。",
+        "tags": ["listening", "detail", "purpose"]
+      },
+      {
+        "id": "listening-q11",
+        "stem": "When will the man get the new T-shirt?",
+        "options": ["In about two or three hours.", "In about two or three days.", "In about two or three weeks."],
+        "answer": "In about two or three days.",
+        "analysis": "细节题。售货员问：“Is it OK for you to wait for two or three days?” 男士同意。",
+        "tags": ["listening", "detail", "time"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-009",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-09.mp3",
+        "duration": 40
+      },
+      "transcript": "M: Allison, I've heard you got a new job in California. Congratulations!\nW: Thanks.\nM: Will you still work in a hospital?\nW: No. My new job is to teach Chinese in a language school.\nM: I didn't know you speak Chinese. How did you learn it?\nW: I learned it from my grandma. She used to work in a Chinese company.\nM: So, will you come back some day?\nW: Of course. I plan to work there for three years. All my friends are here, you know.\nM: Well, I'm sure you'll make some new friends there.",
+      "dialogue": [
+        { "role": "M", "text": "Allison, I've heard you got a new job in California. Congratulations!" },
+        { "role": "W", "text": "Thanks." },
+        { "role": "M", "text": "Will you still work in a hospital?" },
+        { "role": "W", "text": "No. My new job is to teach Chinese in a language school." },
+        { "role": "M", "text": "I didn't know you speak Chinese. How did you learn it?" },
+        { "role": "W", "text": "I learned it from my grandma. She used to work in a Chinese company." },
+        { "role": "M", "text": "So, will you come back some day?" },
+        { "role": "W", "text": "Of course. I plan to work there for three years. All my friends are here, you know." },
+        { "role": "M", "text": "Well, I'm sure you'll make some new friends there." }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q12",
+        "stem": "Where did Allison probably work in the past?",
+        "options": ["In a hospital.", "In a school.", "In a company."],
+        "answer": "In a hospital.",
+        "analysis": "推断题。对话中问：“Will you still work in a hospital?” 女士回答No，说明之前在医院工作。",
+        "tags": ["listening", "inference", "career"]
+      },
+      {
+        "id": "listening-q13",
+        "stem": "Who taught Allison Chinese?",
+        "options": ["Her mum.", "Her friend.", "Her grandma."],
+        "answer": "Her grandma.",
+        "analysis": "细节题。女士说：“I learned it from my grandma.”",
+        "tags": ["listening", "detail", "person"]
+      },
+      {
+        "id": "listening-q14",
+        "stem": "How long will Allison work at her new job?",
+        "options": ["For one year.", "For two years.", "For three years."],
+        "answer": "For three years.",
+        "analysis": "细节题。女士明确表示：“I plan to work there for three years.”",
+        "tags": ["listening", "detail", "time"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-010",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-10.mp3",
+        "duration": 35
+      },
+      "transcript": "M: Hi, Kitty. Glad to see you here.\nW: Glad to see you too, Martin. When did you get here?\nM: Last Tuesday. How long have you been here?\nW: I've stayed here for six days.\nM: Is it your first time to come to Paris?\nW: Yes, it is so big and pretty beautiful.\nM: Have you got lost these days?\nW: No, I always meet some friendly people. They tell me where I should go.\nM: Really? But I used to be worried about this. So I stayed in the hotel till today.\nW: How poor you are! Why not hang out with me now?\nM: Sounds great!",
+      "dialogue": [
+        { "role": "M", "text": "Hi, Kitty. Glad to see you here." },
+        { "role": "W", "text": "Glad to see you too, Martin. When did you get here?" },
+        { "role": "M", "text": "Last Tuesday. How long have you been here?" },
+        { "role": "W", "text": "I've stayed here for six days." },
+        { "role": "M", "text": "Is it your first time to come to Paris?" },
+        { "role": "W", "text": "Yes, it is so big and pretty beautiful." },
+        { "role": "M", "text": "Have you got lost these days?" },
+        { "role": "W", "text": "No, I always meet some friendly people. They tell me where I should go." },
+        { "role": "M", "text": "Really? But I used to be worried about this. So I stayed in the hotel till today." },
+        { "role": "W", "text": "How poor you are! Why not hang out with me now?" },
+        { "role": "M", "text": "Sounds great!" }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q15",
+        "stem": "When did Martin arrive?",
+        "options": ["Last Tuesday.", "Last Wednesday.", "Last Friday."],
+        "answer": "Last Tuesday.",
+        "analysis": "细节题。Martin回答到达时间是：“Last Tuesday.”",
+        "tags": ["listening", "detail", "time"]
+      },
+      {
+        "id": "listening-q16",
+        "stem": "What does Kitty think of Paris?",
+        "options": ["Small.", "Beautiful.", "Modern."],
+        "answer": "Beautiful.",
+        "analysis": "细节题。Kitty评价巴黎：“it is so big and pretty beautiful.”",
+        "tags": ["listening", "detail", "opinion"]
+      },
+      {
+        "id": "listening-q17",
+        "stem": "What might Martin do next?",
+        "options": ["Go back home.", "Hang out with Kitty.", "Continue staying in the hotel."],
+        "answer": "Hang out with Kitty.",
+        "analysis": "细节题。Kitty提议：“Why not hang out with me now?” Martin欣然同意。",
+        "tags": ["listening", "detail", "action"]
+      }
+    ]
+  },
+  {
+    "id": "group-listening-011",
+    "type": "listening",
+    "skill": "听力",
+    "material": {
+      "kind": "listening",
+      "audio": {
+        "src": "/audio/listening-11.mp3",
+        "duration": 45
+      },
+      "transcript": "Welcome to Hong Kong Sea World. Here is some information for you. We are open from Tuesday to Sunday in a week, from nine a.m. to six p.m. Visitors are welcome all year round except March. Every morning at eleven, there is a short film about the sea in the Visitor Centre. Then you can go to see different animals in different halls. If you are hungry, enjoy the delicious food in the dining room. The dolphin show begins at two o'clock every afternoon. Dolphins are lovely and clever animals, so the show is children's favourite at our Sea World. You'd better arrive by 1:45 p.m. to have a good seat. Adult tickets cost fifty dollars each and child tickets are half price. And there are special prices for school groups. Have fun!",
+      "dialogue": [
+        { "role": "M", "text": "Welcome to Hong Kong Sea World. Here is some information for you. We are open from Tuesday to Sunday in a week, from nine a.m. to six p.m. Visitors are welcome all year round except March. Every morning at eleven, there is a short film about the sea in the Visitor Centre. Then you can go to see different animals in different halls. If you are hungry, enjoy the delicious food in the dining room. The dolphin show begins at two o'clock every afternoon. Dolphins are lovely and clever animals, so the show is children's favourite at our Sea World. You'd better arrive by 1:45 p.m. to have a good seat. Adult tickets cost fifty dollars each and child tickets are half price. And there are special prices for school groups. Have fun!" }
+      ]
+    },
+    "questions": [
+      {
+        "id": "listening-q18",
+        "stem": "How many days is the Sea World open in a week?",
+        "options": ["Four.", "Five.", "Six."],
+        "answer": "Six.",
+        "analysis": "细节题。开放时间为：“from Tuesday to Sunday in a week”（周二到周日，共6天）。",
+        "tags": ["listening", "detail", "number"]
+      },
+      {
+        "id": "listening-q19",
+        "stem": "What do the children like best about the Sea World?",
+        "options": ["The film.", "The food.", "The dolphin show."],
+        "answer": "The dolphin show.",
+        "analysis": "细节题。录音提到：“so the show is children's favourite at our Sea World.”（海豚表演是孩子们最喜欢的）。",
+        "tags": ["listening", "detail", "preference"]
+      },
+      {
+        "id": "listening-q20",
+        "stem": "How much should a child pay to enter the Sea World?",
+        "options": ["$15.", "$25.", "$50."],
+        "answer": "$25.",
+        "analysis": "计算题。成人票50美元，儿童票半价（child tickets are half price），即25美元。",
+        "tags": ["listening", "calculation", "price"]
+      }
+    ]
+  },
+  {
+    "id": "group-grammar-001",
+    "type": "grammar",
+    "skill": "语法",
+    "material": null,
+    "questions": [
+      {
+        "id": "grammar-01",
+        "stem": "Grandpa's birthday is coming. We've decided to make a cake for ______",
+        "options": ["him", "her", "them", "you"],
+        "answer": "him",
+        "analysis": "考查代词。介词for后接人称代词宾格。Grandpa（爷爷）是男性，因此用him。",
+        "tags": ["pronoun", "grammar"]
+      },
+      {
+        "id": "grammar-02",
+        "stem": "I watched the movie Ne Zha 2 ______ the cinema with my parents.",
+        "options": ["on", "of", "in", "to"],
+        "answer": "in",
+        "analysis": "考查介词。在电影院（in the cinema）是固定搭配。",
+        "tags": ["preposition", "grammar"]
+      },
+      {
+        "id": "grammar-03",
+        "stem": "—Mr. Li, must I hand in the homework now? \n—No, you ______. You can give it to me tomorrow.",
+        "options": ["can't", "shouldn't", "mustn't", "needn't"],
+        "answer": "needn't",
+        "analysis": "考查情态动词。以must提问的疑问句，否定回答表示“不必”时，应用needn't 或 don't have to，不能用mustn't（禁止）。",
+        "tags": ["modal-verb", "grammar"]
+      },
+      {
+        "id": "grammar-04",
+        "stem": "—What kind of books do you like ______, comic books or science fiction books? \n—Science fiction books.",
+        "options": ["well", "better", "best", "the best"],
+        "answer": "better",
+        "analysis": "考查形容词比较级。由于后面列举了 comic books 和 science fiction books 两类事物进行选择，两者比较应用比较级 better。",
+        "tags": ["adjective", "comparative", "grammar"]
+      },
+      {
+        "id": "grammar-05",
+        "stem": "—______ do you play basketball with your friends? \n—Twice a week.",
+        "options": ["How long", "How far", "How many", "How often"],
+        "answer": "How often",
+        "analysis": "考查疑问词。答语为 Twice a week（一周两次），表示频率，对频率提问用 How often。",
+        "tags": ["wh-question", "frequency", "grammar"]
+      },
+      {
+        "id": "grammar-06",
+        "stem": "Be sure to follow the traffic rules, ______ you may get into trouble.",
+        "options": ["or", "but", "and", "for"],
+        "answer": "or",
+        "analysis": "考查连词。句意为“一定要遵守交通规则，否则你会遇到麻烦的”。or 在此引出祈使句的结果，意为“否则”。",
+        "tags": ["conjunction", "grammar"]
+      },
+      {
+        "id": "grammar-07",
+        "stem": "Don't give up, Kate. If you keep on trying, you ______ progress soon.",
+        "options": ["make", "made", "will make", "have made"],
+        "answer": "will make",
+        "analysis": "考查时态。If 引导的条件状语从句遵循“主将从现”原则。从句用一般现在时 (keep on)，主句用一般将来时 (will make)。",
+        "tags": ["conditional", "future-tense", "grammar"]
+      },
+      {
+        "id": "grammar-08",
+        "stem": "Peter likes reading very much. He ______ books with his dad every evening.",
+        "options": ["read", "reads", "is reading", "has read"],
+        "answer": "reads",
+        "analysis": "考查时态。时间状语 every evening 表明是一般现在时。主语 He 为第三人称单数，动词用 reads。",
+        "tags": ["present-tense", "verb", "grammar"]
+      },
+      {
+        "id": "grammar-09",
+        "stem": "—Lucy, what were you doing at seven last night? \n—I ______ dinner for my family.",
+        "options": ["cooked", "am cooking", "will cook", "was cooking"],
+        "answer": "was cooking",
+        "analysis": "考查时态。问句询问昨晚7点（过去某个具体时刻）正在做的事，应用过去进行时。回答同样保持过去进行时 was cooking。",
+        "tags": ["past-continuous-tense", "grammar"]
+      },
+      {
+        "id": "grammar-10",
+        "stem": "Mr. Green ______ Chinese for three years. He's much better at it now.",
+        "options": ["learns", "has learned", "learned", "will learn"],
+        "answer": "has learned",
+        "analysis": "考查时态。时间状语 for three years 表示动作从过去持续到现在，应用现在完成时。主语 Mr. Green 为单数，用 has learned。",
+        "tags": ["present-perfect-tense", "grammar"]
+      },
+      {
+        "id": "grammar-11",
+        "stem": "A new hospital ______ in our city last month.",
+        "options": ["builds", "built", "is built", "was built"],
+        "answer": "was built",
+        "analysis": "考查被动语态与时态。主语 A new hospital 与动词 build 是被动关系；由 last month 可知是一般过去时，故选 was built。",
+        "tags": ["passive-voice", "past-tense", "grammar"]
+      },
+      {
+        "id": "grammar-12",
+        "stem": "—Lily, can you tell me ______ the Great Wall? \n—Sure. Next Friday.",
+        "options": ["when did our class visit", "when our class visited", "when will our class visit", "when our class will visit"],
+        "answer": "when our class will visit",
+        "analysis": "考查宾语从句。宾语从句必须使用陈述语序，排除A和C。答语 Next Friday 表明事情发生在将来，因此选D（when our class will visit）。",
+        "tags": ["object-clause", "word-order", "grammar"]
+      }
+    ]
+  },
+  {
+    "id": "group-reading-A",
+    "type": "reading",
+    "skill": "阅读",
+    "intro": "新的篇章开始，保持耐心，读懂每个线索。",
+    "material": {
+      "kind": "passage",
+      "text": "Forgiveness waits patiently in the first days of the New Year. It was a cold winter night when my father asked me to come and sit by his side. In some way, I was able to sense his sadness. My father had always been emotionless and at times cold. Being a successful businessman and a well-respected leader never earned him a \"Cool Dad\" title. He missed out on too many important moments in my life because of so many business trips. I never had much connection with him growing up. We didn't spend much time together. As I was thinking about childhood memories, he said, \"Jane, I'm here to say sorry to you.\" I felt a heavy pounding on my heart and felt troubled at his words. In my mind, he had been wrong for years for those countless absences from my birth, to my concert performances, parent meetings, and more. He always seemed busy, too busy to notice things, too busy to care. \nThen, he let out a soft cry. It was the first time I had ever seen him cry. I was surprised by the unusual emotional connection shared between us and could only lay my hand on his back, not able to say a word. Trying to catch his breath, he said, \"I'm sorry that I haven't been there for you all these years. You have no idea how many times I have wanted to give you a hug and tell you that I'm proud of you. I just want to let you know how much I love you...\" I listened in silence until my eyes became watery, until I couldn't hold back my tears. I realized that while I was blaming my father for his disappointing absence, he was also reaching out to me for comfort, warmth, and family support after a lifetime of long days of work. I wasn't there for him, either. At that moment, all my complaints seemed so selfish. I felt ashamed. \n\"Papa?\" I said as he looked at me, \"I am sorry, too.\" In the silence that followed, we breathed the same fresh air of forgiveness, together. No more words were needed to understand. We entered the new year, for the first time, as father and daughter."
+    },
+    "questions": [
+      {
+        "id": "reading-A-24",
+        "stem": "In Jane's eyes, what was her father like before?",
+        "options": ["Patient.", "Cool.", "Proud.", "Emotionless."],
+        "answer": "Emotionless.",
+        "analysis": "细节理解题。第一段明确提到：“My father had always been emotionless and at times cold.”（我的父亲一直都不露情感，有时还很冷漠）。",
+        "tags": ["reading-comprehension", "detail", "character"]
+      },
+      {
+        "id": "reading-A-25",
+        "stem": "Why did Jane's father cry?",
+        "options": ["Because he felt sorry for his daughter.", "Because he was disappointed in his daughter.", "Because he felt a heavy pounding on his heart.", "Because he was surprised by the unusual connection."],
+        "answer": "Because he felt sorry for his daughter.",
+        "analysis": "推理判断题。第二段父亲哭泣并说道：“I'm sorry that I haven't been there for you all these years.”（很抱歉这些年我没有陪在你身边），说明他是因为缺席女儿的成长而感到抱歉和愧疚。",
+        "tags": ["reading-comprehension", "inference", "cause-effect"]
+      },
+      {
+        "id": "reading-A-26",
+        "stem": "What can we learn from the last paragraph?",
+        "options": ["Jane forgave her father.", "They understood each other.", "They sensed each other's sadness.", "Jane's father felt ashamed of himself."],
+        "answer": "They understood each other.",
+        "analysis": "推理判断题。最后一段提到：“we breathed the same fresh air of forgiveness, together. No more words were needed to understand.”（我们一起呼吸着宽恕的新鲜空气。不需要更多言语就能理解彼此），说明父女俩达成了深层的相互理解。",
+        "tags": ["reading-comprehension", "inference", "paragraph-meaning"]
+      }
+    ]
+  },
+  {
+    "id": "group-reading-B",
+    "type": "reading",
+    "skill": "阅读",
+    "intro": "深呼吸，慢慢读，你会找到答案。",
+    "material": {
+      "kind": "passage",
+      "text": "What you say to yourself affects how you act and feel. Most people have inner voice. It's the internal chatter that goes on inside your head. What you say to yourself and how you say it, makes a difference to how you think, feel and behave. \nYour inner voice is always with you, giving a commentary inside your head. You might notice it when you make a mistake, when you try something new, or when you solve a problem. Your inner voice has different tones. Sometimes it sounds kind but at other times it can sound mean or scared. Young people's coach Maria Evans says it should be treated with kindness. \"It gets scared when you think about doing something that feels challenging. It can be helpful to talk to that voice with kindness and understanding. Often, all it needs is to be listened to and spoken to with love and comfort.\" Your inner voice, also known as your self talk, has an impact on you because you already pay attention to it. So what you say to yourself, and what you hear, sinks in. If you keep telling yourself you can't do maths or you're not good at making friends or you're not creative, over time, you'll believe what your inner voice is saying. When you talk to yourself using a phrase like \"I've got to tidy my room\", it makes the task feel harder. If instead you say, \"I choose to tidy my room and then I'll be able to find the books or toys I want easily\", it's more positive. You're telling yourself how you'll benefit from tidying your room. Noticing what your inner voice says and choosing to talk kindly and encouragingly to yourself can help you feel more confident. For example, when you make a mistake, tell yourself it's OK to get things wrong and you'll learn for next time. Or when you do something you feel nervous about, congratulate yourself for being brave and having a go. If you're not sure what to say, imagine you're talking to your best friend and trying to support and help them inside your head."
+    },
+    "questions": [
+      {
+        "id": "reading-B-27",
+        "stem": "What does Maria Evans suggest when your inner voice sounds scared?",
+        "options": ["Listening to your inner voice and speaking to it kindly.", "Taking outside advice instead of your inner voice.", "Paying no attention to your inner voice.", "Following your inner voice."],
+        "answer": "Listening to your inner voice and speaking to it kindly.",
+        "analysis": "细节理解题。第二段 Maria Evans 提到：“Often, all it needs is to be listened to and spoken to with love and comfort.”（通常它需要的只是被倾听，用爱和安慰与它交谈），这与选项A相符。",
+        "tags": ["reading-comprehension", "detail", "advice"]
+      },
+      {
+        "id": "reading-B-28",
+        "stem": "Which inner voice would the writer most probably hope for?",
+        "options": ["\"It's my duty, so I have to finish the task first.\"", "\"I'm so careless, I should always keep the keys with me.\"", "\"It's too hard, so I don't want to speak in public ever again.\"", "\"It's quite normal to feel nervous about the test. Just enjoy it.\""],
+        "answer": "\"It's quite normal to feel nervous about the test. Just enjoy it.\"",
+        "analysis": "推理判断题。文章结尾建议我们用积极、包容的态度对待自己的内心声音（choosing to talk kindly and encouragingly to yourself）。选项D“对考试感到紧张很正常。享受它就好”体现了这种积极自我安慰的态度。",
+        "tags": ["reading-comprehension", "inference", "attitude"]
+      },
+      {
+        "id": "reading-B-29",
+        "stem": "Which of the following would be the best title for the passage?",
+        "options": ["Making Friends with Your Inner Voice", "Accepting Your Inner Voice as a Guide", "Training Your Inner Voice to Be Much Better", "Understanding Different Types of Your Inner Voice"],
+        "answer": "Making Friends with Your Inner Voice",
+        "analysis": "主旨大意题。文章通篇讨论了如何面对自己内心的声音（inner voice），并建议我们要善待它，像对待最好的朋友一样去支持它（imagine you're talking to your best friend）。“和你的内心声音做朋友”最符合全文核心主旨。",
+        "tags": ["reading-comprehension", "main-idea", "title"]
+      }
+    ]
+  },
+  {
+    "id": "group-reading-C",
+    "type": "reading",
+    "skill": "阅读",
+    "intro": "保持专注，这一卷知识很长，但一定能读懂。",
+    "material": {
+      "kind": "passage",
+      "text": "Should Sugary Drinks Be Banned? \nHow many sugary drinks do you drink a day? A number of recent studies have warned of the dangers of taking in too much sugar. But just how bad are these drinks for us? \nThe consumption of sugary drinks has been steadily increasing. In the 1970s, sugary drinks made up about 4% of US daily calorie intake; by 2001, that had risen to about 9%. These days, it's about 227 calories a day, which is equal to about 2.5 cans of cola, according to a study by the US Center for Disease Control and Prevention. On any given day, half the people in the US consume sugary drinks; 1 in 4 get at least 200 calories from such drinks; and 5% get at least 567 calories—equivalent to 4 cans of soda. Sugary drinks(soda, energy drinks, sports drinks) are the top calorie source in teens' diets (226 calories per day), beating out pizza (213 calories per day). There's a lot of evidence that sugary drinks can lead to serious medical complications, and even death. Research presented at an American Heart Association conference showed that 180,000 deaths worldwide are linked to sugary drinks. \"A large number of deaths each year are caused by drinking sugary drinks,\" said Dr Gitanjali Singh, a postdoctoral research fellow at the Harvard School of Public Health. His research has linked the intake of sugar-sweetened drinks to 133,000 diabetes deaths, 44,000 deaths from cardiovascular diseases and 6,000 cancer deaths. \"Our findings should push policy makers worldwide to make effective policies to reduce consumption of sugary drinks, such as taxation, mass-media campaigns, and reducing the availability of these drinks.\" The increase in sugar consumption from sugary drinks can also lead to obesity. In turn, this can lead to diseases such as diabetes, cancer, fatty liver disease, dementia and heart problems. On top of that, research shows that carbonated drinks can cause both dental erosion and tooth decay. In response, the USDA has banned snack foods and sugary drinks in schools. The new law (under the Healthy, Hunger-Free Kids Act) was passed by Congress in 2010 with broad bipartisan support. So, surely the logical thing would be to drink something healthier, such as orange juice. Well, apparently that might not be a good idea either. According to the American obesity expert Robert Lustig, orange juice is just sugar and is therefore, in his view, a \"poison\". Lustig is the author of Fat Chance: The Bitter Truth about Sugar. \"Calorie for calorie, 100% orange juice is worse for you than sugary sodas,\" Lustig says. When you eat a whole apple, the sugar is \"nicely balanced\" by the fibre, giving the liver a chance to fully metabolise what's coming in. However, when you down half a litre of apple juice, it brings a huge dose of energy straight to the liver. Of course, no one is suggesting you give up on your favorite drinks, but as with everything, drink in moderation. And when in doubt, you can always try a bit of that transparent stuff that makes up about 60% of our bodies: water!"
+    },
+    "questions": [
+      {
+        "id": "reading-C-30",
+        "stem": "Why does the writer mention so many numbers in Paragraph 2?",
+        "options": ["To discuss what effects sugary drinks have on health.", "To describe the types of sugary drinks people consume.", "To explain why sugary drinks have become more popular.", "To stress the increase in sugary drinks people consume."],
+        "answer": "To stress the increase in sugary drinks people consume.",
+        "analysis": "写作手法/意图题。第二段列举大量数据（从4%到9%，以及现在的每天摄入量等），首句点明了核心：“The consumption of sugary drinks has been steadily increasing.”（含糖饮料的消耗量一直在稳步增加）。列举数字是为了强调这种增长趋势。",
+        "tags": ["reading-comprehension", "purpose", "writing-technique"]
+      },
+      {
+        "id": "reading-C-31",
+        "stem": "What does the word \"poison\" in Paragraph 7 most probably mean?",
+        "options": ["Something good for energy.", "Something helpful for the heart.", "Something harmful to health.", "Something unpleasant to taste."],
+        "answer": "Something harmful to health.",
+        "analysis": "词义猜测题。前文提到喝果汁可能“不是个好主意”，紧接着 Robert Lustig 称橙汁实质上只是糖，并将其视为“poison”（毒药），后文还说它对身体比苏打水还糟糕。由此推测，在此语境下“poison”指“对健康有害的东西”。",
+        "tags": ["reading-comprehension", "vocabulary", "inference"]
+      },
+      {
+        "id": "reading-C-32",
+        "stem": "What can we learn from the passage?",
+        "options": ["Eating apples is healthier than drinking apple juice.", "Half the people in the world drink orange juice every day.", "Moderation in sugary drinks intake helps support good health.", "Many countries have taken action to ban sugary drinks in schools."],
+        "answer": "Moderation in sugary drinks intake helps support good health.",
+        "analysis": "推理判断题。文章在列举了大量含糖饮料的健康风险后，结尾做出了总结：“drink in moderation.”（适度饮用），也就是说合理控制摄入量有助于保持健康。",
+        "tags": ["reading-comprehension", "inference", "detail"]
+      },
+      {
+        "id": "reading-C-33",
+        "stem": "What is the writer's main purpose in writing this passage?",
+        "options": ["To remind us of the risk of consuming sugary drinks.", "To introduce the history of sugary drink consumption.", "To suggest limiting the intake of sugary drinks reasonably.", "To compare the intake of sugary drinks with that of water."],
+        "answer": "To suggest limiting the intake of sugary drinks reasonably.",
+        "analysis": "主旨意图题。文章从含糖饮料的危害谈起，甚至打破了“果汁更健康”的迷思，最后的落脚点是建议大家“适量饮用”（drink in moderation）或者多喝水。因此，作者的主要目的是建议读者合理限制含糖饮料的摄入量。",
+        "tags": ["reading-comprehension", "main-idea", "purpose"]
+        }
+      ]
+    }
+  ]
+}
