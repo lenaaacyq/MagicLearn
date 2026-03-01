@@ -1,7 +1,6 @@
 "use client";
 
 import { motion } from "framer-motion";
-import Link from "next/link";
 import { Settings } from "lucide-react";
 import AgentSpace from "../components/AgentSpace";
 import QuestBoard from "../components/QuestBoard";
