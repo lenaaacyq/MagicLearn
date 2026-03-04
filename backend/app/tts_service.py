@@ -28,6 +28,44 @@ class PollResult:
     error: Optional[str] = None
 
 
+def save_audio_bytes(audio: bytes, audio_format: Optional[str]) -> str:
+    return _save_audio_bytes(audio, audio_format)
+
+
+def synthesize_dialogue_bytedance_bytes(
+    dialogue: list[dict[str, Any]], audio_format: Optional[str]
+) -> Tuple[Optional[bytes], Optional[str]]:
+    encoding = (audio_format or os.environ.get("TTS_ENCODING", "mp3")).strip().lower()
+    if encoding != "mp3":
+        return None, "dialogue tts only supports mp3"
+    combined = b""
+    for entry in dialogue:
+        if not isinstance(entry, dict):
+            continue
+        text = str(entry.get("text", "") or "").strip()
+        if not text:
+            continue
+        role = str(entry.get("role", "") or "").strip().lower()
+        female = os.environ.get("TTS_VOICE_TYPE_FEMALE")
+        male = os.environ.get("TTS_VOICE_TYPE_MALE")
+        voice: Optional[str]
+        if role.startswith("w"):
+            voice = female
+        elif role.startswith("m"):
+            voice = male
+        else:
+            voice = None
+        if not voice:
+            return None, f"missing voice for role: {entry.get('role')}"
+        audio_bytes, error = synthesize_bytedance_bytes(text, voice, encoding)
+        if error or not audio_bytes:
+            return None, error or "TTS failed"
+        combined += audio_bytes
+    if not combined:
+        return None, "empty dialogue"
+    return combined, None
+
+
 def submit_tts_job(text: str, voice: Optional[str], audio_format: Optional[str]) -> SubmitResult:
     if _is_bytedance_enabled():
         return _submit_bytedance(text, voice, audio_format)
@@ -170,7 +208,12 @@ def synthesize_bytedance_bytes(
     appid = os.environ.get("TTS_APP_ID")
     access_token = os.environ.get("TTS_ACCESS_TOKEN")
     cluster = os.environ.get("TTS_CLUSTER")
-    voice_type = voice or os.environ.get("TTS_VOICE_TYPE")
+    voice_type = (
+        voice
+        or os.environ.get("TTS_VOICE_TYPE")
+        or os.environ.get("TTS_VOICE_TYPE_FEMALE")
+        or os.environ.get("TTS_VOICE_TYPE_MALE")
+    )
     if not appid or not access_token or not cluster or not voice_type:
         return None, "TTS credentials not configured"
     submit_url = os.environ.get("TTS_SUBMIT_URL", "https://openspeech.bytedance.com/api/v1/tts")

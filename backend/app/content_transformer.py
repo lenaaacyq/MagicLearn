@@ -7,9 +7,9 @@ import urllib.request
 from typing import Any
 
 try:
-    from .db import list_knowledge, upsert_ip_content
+    from .db import list_untransformed_knowledge, upsert_ip_content
 except ImportError:
-    from db import list_knowledge, upsert_ip_content
+    from db import list_untransformed_knowledge, upsert_ip_content
 
 DEFAULT_MODEL = "moonshot-v1-8k"
 
@@ -48,16 +48,29 @@ def compose_system_prompt(config: dict[str, str]) -> str:
 
 
 def build_prompt(system_prompt: str, record: dict[str, Any]) -> list[dict[str, str]]:
+    original_text = str(record.get("text", "") or "").strip()
+    original_answer = str(record.get("answer", "") or "").strip()
     user_prompt = (
-        "你将收到一条英语学习素材，请保持考察重点不变，仅改变故事背景、名词和叙事口吻，"
-        "将其改写为符合以下IP设定的文本。"
-        f"\nIP设定：{system_prompt}\n"
-        f"原始内容：{record.get('text','')}\n"
-        f"考察重点：{record.get('focus','')}\n"
-        f"题型：{record.get('type','')}\n"
-        f"难度：{record.get('difficulty','')}\n"
-        f"参考答案：{record.get('answer','')}\n"
-        "请输出改写后的文本，不要输出解释。"
+        "你将收到一条英语学习题目素材。请把它改写成“魔法学院 IP 风格”，但必须保持考察点与题目结构稳定。"
+        "\n\n硬性规则："
+        "\n- 不改变题目意图与考察点。"
+        "\n- 如果原文包含选项（A/B/C/D...）与空格/下划线/括号，请保留这些结构与数量。"
+        "\n- 如果原文是完形/阅读材料+多空，请保留空号与顺序，并保留选项列表的编号与顺序。"
+        "\n- 不要新增无关角色，不要加入解释、分析、系统提示。"
+        "\n- 输出只要“改写后的题目正文”，不要包含前后缀说明。"
+        "\n- 如果原文是阅读/听力材料+问题，请保留“材料 → 问题 → 选项”的层级。"
+        "\n- 用词难度控制在初中英语范围（约 CEFR A2-B1）。"
+        "\n- 避免生僻词、古英语、罕见魔法专有名词或虚构咒语。"
+        "\n- 魔法元素用简单词表达（如 magic, wand, spell, castle, teacher, student）。"
+        "\n\n改写风格（IP 设定）："
+        f"\n{system_prompt}"
+        "\n\n输入："
+        f"\n题型：{record.get('type','')}"
+        f"\n难度：{record.get('difficulty','')}"
+        f"\n考察重点：{record.get('focus','')}"
+        f"\n参考答案（仅用于保持正确性，不要在输出中额外强调）：{original_answer}"
+        f"\n原始题目：\n{original_text}"
+        "\n\n输出："
     )
     return [
         {"role": "system", "content": system_prompt},
@@ -96,13 +109,19 @@ def call_kimi(
 def transform_records(config: dict[str, str]) -> int:
     base_url = os.environ.get("MOONSHOT_BASE_URL", "https://api.moonshot.cn/v1")
     api_key = os.environ.get("MOONSHOT_API_KEY", "")
-    records = list_knowledge()
+    batch_limit = int(os.environ.get("TRANSFORM_BATCH_LIMIT", "30"))
+    records = list_untransformed_knowledge(limit=batch_limit)
+    if not records:
+        return 0
     system_prompt = compose_system_prompt(config)
     results: list[dict[str, Any]] = []
     for record in records:
         if api_key:
             messages = build_prompt(system_prompt, record)
-            ip_text = call_kimi(base_url, api_key, messages)
+            try:
+                ip_text = call_kimi(base_url, api_key, messages, model=DEFAULT_MODEL)
+            except Exception:
+                ip_text = f"在魔法学院的语境中：{record.get('text','')}"
         else:
             ip_text = f"在魔法学院的语境中：{record.get('text','')}"
         results.append({"source_id": record["id"], "ip_text": ip_text})

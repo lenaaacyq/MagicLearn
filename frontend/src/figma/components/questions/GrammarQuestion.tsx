@@ -21,7 +21,15 @@ export default function GrammarQuestion({ onComplete }: GrammarQuestionProps) {
   const wrongSfxRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  const items = useMemo(() => getQuestionItems("grammar"), []);
+  const [items, setItems] = useState(() => getQuestionItems("grammar"));
+  useEffect(() => {
+    const refresh = () => setItems(getQuestionItems("grammar"));
+    refresh();
+    window.addEventListener("magic-user-question-updated", refresh);
+    return () => {
+      window.removeEventListener("magic-user-question-updated", refresh);
+    };
+  }, []);
   const introMessage = useMemo(
     () => "🪄 找出那个最关键的魔法词汇，让静止的咒语动起来。",
     []
@@ -257,8 +265,13 @@ export default function GrammarQuestion({ onComplete }: GrammarQuestionProps) {
               >
                 <div className="glass-panel rounded-3xl p-5">
                   <div className="flex items-center justify-between gap-4 mb-2">
-                    <div className="text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
-                      咒语语法课
+                    <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
+                      <span>咒语语法课</span>
+                      {current.isNew && (
+                        <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[var(--neon-gold)]/20 text-[var(--neon-gold)] border border-[var(--neon-gold)]/30">
+                          NEW
+                        </span>
+                      )}
                     </div>
                     <div className="text-xs text-[var(--muted-foreground)]">
                       {currentIndex + 1} / {total}

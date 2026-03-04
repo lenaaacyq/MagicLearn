@@ -1,117 +1,335 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import {
   ArrowLeft,
-  BookOpen,
+  Check,
+  Loader2,
   Sparkles,
-  Tag,
-  Upload
+  Wand2
 } from "lucide-react";
+import MerlinAssistant from "../components/MerlinAssistant";
+import { saveUserQuestionItems } from "../data/questionBank";
 
-interface DataRow {
+interface GeneratedQuestion {
   id: number;
-  originalText: string;
-  knowledgePoints: string[];
-  difficulty: number;
-  isNew: boolean;
+  type: 'grammar' | 'reading' | 'listening';
+  question: string;
+  options?: string[];
+  material?: string;
 }
 
-type ParsedRecord = {
+type Material = {
+  kind: string;
   text?: string;
-  focus?: string | string[];
-  difficulty?: number | string;
+  transcript?: string;
+  audio?: { src?: string; duration?: number };
+  dialogue?: Array<{ role: string; text: string }>;
+} | null;
+
+type ApiRecord = {
+  text?: string;
+  type?: string;
+  answer?: string;
+  tags?: string[];
+  material?: Material;
+  options?: string[];
 };
 
 export default function AdminPage() {
-  const apiBase = process.env.NEXT_PUBLIC_API_BASE || "http://localhost:8000";
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
-  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [textInput, setTextInput] = useState('');
   const [isGenerating, setIsGenerating] = useState(false);
-  const [parseSource, setParseSource] = useState("");
+  const [generatedQuestions, setGeneratedQuestions] = useState<GeneratedQuestion[]>([]);
+  const [showMerlinTip, setShowMerlinTip] = useState(false);
+  const [merlinMessage, setMerlinMessage] = useState("");
+  const [uploadError, setUploadError] = useState<string | null>(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
+  const [slowNotified, setSlowNotified] = useState(false);
+  const mountedRef = useRef(true);
+  const autoDismissTimerRef = useRef<number | null>(null);
+  const generationStartRef = useRef<number | null>(null);
 
-  const [parsedData, setParsedData] = useState<DataRow[]>([]);
+  const optionLabels = ["A", "B", "C", "D", "E", "F", "G"];
 
-  const handleFileClick = () => {
-    fileInputRef.current?.click();
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (autoDismissTimerRef.current) {
+        window.clearTimeout(autoDismissTimerRef.current);
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!isGenerating) return;
+    const start = generationStartRef.current ?? Date.now();
+    generationStartRef.current = start;
+    const timer = window.setInterval(() => {
+      const next = Math.max(0, Math.floor((Date.now() - start) / 1000));
+      setElapsedSeconds(next);
+    }, 1000);
+    return () => window.clearInterval(timer);
+  }, [isGenerating]);
+
+  useEffect(() => {
+    if (!isGenerating) return;
+    if (slowNotified) return;
+    if (elapsedSeconds < 20) return;
+    showMerlin("生成中耗时较长，先去练习页也没关系，完成后会提醒你");
+    setGlobalMerlinTip("生成中耗时较长，先去练习页也没关系，完成后会提醒你");
+    setSlowNotified(true);
+  }, [elapsedSeconds, isGenerating, slowNotified]);
+
+  const parseOptionsFromText = (
+    text: string
+  ): { question: string; options?: string[]; answer?: string } => {
+    const lines = text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+    const optionRegex = /^([A-G])[).:：]\s*(.+)$/;
+    const answerRegex = /^(answer|答案|correct answer)\s*[:：]\s*([A-G])\b/i;
+    const options: Array<{ id: string; value: string }> = [];
+    const kept: string[] = [];
+    let detectedAnswer: string | undefined;
+    for (const line of lines) {
+      const match = optionRegex.exec(line);
+      if (match) {
+        options.push({ id: match[1], value: match[2] });
+        continue;
+      }
+      const answerMatch = answerRegex.exec(line);
+      if (answerMatch) {
+        detectedAnswer = answerMatch[2].toUpperCase();
+        continue;
+      }
+      {
+        kept.push(line);
+      }
+    }
+    const result = { question: kept.join("\n"), answer: detectedAnswer };
+    if (options.length) {
+      return { ...result, options: options.map((item) => item.value) };
+    }
+    return result;
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) {
-      return;
+  const normalizeAnswer = (
+    raw: string | undefined,
+    options: Array<{ id: string; text: string }>,
+    fallback?: string
+  ) => {
+    const candidate = (raw || "").trim();
+    const letterMatch = candidate.match(/[A-G]/i);
+    if (letterMatch) {
+      return letterMatch[0].toUpperCase();
     }
-    setIsUploading(true);
-    setUploadError(null);
-    setParseSource("");
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-      const response = await fetch(`${apiBase}/api/knowledge-base/upload-file`, {
-        method: "POST",
-        body: formData
-      });
-      if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || "上传解析失败");
+    const normalizedCandidate = candidate.toLowerCase();
+    if (normalizedCandidate) {
+      const matched = options.find(
+        (option) => option.text.trim().toLowerCase() === normalizedCandidate
+      );
+      if (matched) {
+        return matched.text;
       }
-      const data = await response.json();
-      const rows: DataRow[] = (data.records || []).map((record: ParsedRecord, index: number) => {
-        const focusValue = record.focus ?? "";
-        const focusList = Array.isArray(focusValue)
-          ? focusValue
-          : String(focusValue)
-              .split(/[,，、;；\n]/)
-              .map((item) => item.trim())
-              .filter(Boolean);
-        const difficultyValue = Number(record.difficulty);
+    }
+    return fallback || "";
+  };
+
+  const showMerlin = (message: string) => {
+    if (!mountedRef.current) return;
+    if (autoDismissTimerRef.current) {
+      window.clearTimeout(autoDismissTimerRef.current);
+    }
+    setMerlinMessage(message);
+    setShowMerlinTip(true);
+    autoDismissTimerRef.current = window.setTimeout(() => {
+      if (!mountedRef.current) return;
+      setShowMerlinTip(false);
+    }, 15000);
+  };
+
+  const setGlobalMerlinTip = (message: string) => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem(
+      "magic_merlin_tip_v1",
+      JSON.stringify({ message, updatedAt: Date.now() })
+    );
+  };
+
+  const runTransformAndPreview = async () => {
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => controller.abort(), 45000);
+    try {
+      const transformResponse = await fetch("/api/knowledge-base/transform", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
+        body: JSON.stringify({
+          persona: "mentor",
+          tone: "warm",
+          scene: "great_hall",
+          ritual: "quest"
+        })
+      });
+      if (!transformResponse.ok) {
+        const errorText = await transformResponse.text();
+        throw new Error(errorText || "魔法改写失败");
+      }
+
+      await fetch("/api/knowledge-base/compare", { method: "GET" }).catch(() => {});
+    } finally {
+      window.clearTimeout(timer);
+    }
+  };
+
+  const handleGenerate = async () => {
+    const content = textInput.trim();
+    if (!content) return;
+    const isListeningRequest = /听力/i.test(content) || /listening/i.test(content);
+    if (mountedRef.current) setUploadError(null);
+    setIsGenerating(true);
+    setGeneratedQuestions([]);
+    const startTime = Date.now();
+    generationStartRef.current = startTime;
+    setElapsedSeconds(0);
+    setSlowNotified(false);
+    showMerlin("正在为你魔法改写，可以返回用户页进行其它任务");
+    try {
+      const response = await fetch("/api/knowledge-base/upload-text", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text: content })
+      });
+      let errorText = "";
+      let data: { records?: ApiRecord[] } | null = null;
+      if (!response.ok) {
+        errorText = await response.text();
+      } else {
+        data = await response.json();
+      }
+      if (isListeningRequest) {
+        const elapsed = Date.now() - startTime;
+        const waitMs = Math.max(0, 30000 - elapsed);
+        if (waitMs) {
+          await new Promise((resolve) => window.setTimeout(resolve, waitMs));
+        }
+        const message = "生成失败，请稍后再试";
+        if (mountedRef.current) setUploadError(message);
+        showMerlin(message);
+        setGlobalMerlinTip(message);
+        return;
+      }
+      if (!response.ok) {
+        throw new Error(errorText || "文本提交失败");
+      }
+      const records = Array.isArray(data?.records) ? data.records : [];
+      const now = Date.now();
+      const items = (records as ApiRecord[]).map((record, index) => {
+        const rawType = String(record.type || "grammar").toLowerCase();
+        const type = (rawType === "reading" || rawType === "listening" ? rawType : "grammar") as
+          | "grammar"
+          | "reading"
+          | "listening";
+        const rawText = String(record.text || "");
+        const parsed = parseOptionsFromText(rawText);
+        const optionsSource = Array.isArray(record.options) && record.options.length ? record.options : parsed.options || [];
+        const options = optionsSource.map((text, optionIndex) => ({
+          id: optionLabels[optionIndex] || `${optionIndex + 1}`,
+          text
+        }));
+        const normalizedAnswer = normalizeAnswer(
+          typeof record.answer === "string" ? record.answer : undefined,
+          options,
+          parsed.answer
+        );
+        const tagsValue = record.tags;
+        const tags = Array.isArray(tagsValue) ? tagsValue : [];
+        const material =
+          record.material && typeof record.material === "object" && typeof record.material.kind === "string"
+            ? record.material
+            : undefined;
         return {
-          id: index + 1,
-          originalText: record.text || "",
-          knowledgePoints: focusList.length ? focusList : ["未标注考点"],
-          difficulty: Number.isFinite(difficultyValue) ? Math.min(5, Math.max(1, difficultyValue)) : 3,
-          isNew: true
+          id: `user-${now}-${index}`,
+          groupId: "user-text",
+          type,
+          material,
+          stem: parsed.question,
+          options,
+          answer: normalizedAnswer,
+          tags,
+          isNew: true,
+          createdAt: now - index
         };
       });
-      setParsedData(rows);
-      setParseSource(typeof data.source === "string" ? data.source : "");
+      saveUserQuestionItems(items);
+      const preview = (records as ApiRecord[]).slice(0, 3).map((record, index) => {
+        const type = (record.type || "grammar") as GeneratedQuestion["type"];
+        const parsed = parseOptionsFromText(String(record.text || ""));
+        return {
+          id: index + 1,
+          type,
+          question: parsed.question,
+          options: parsed.options
+        };
+      });
+      if (mountedRef.current) setGeneratedQuestions(preview);
+      showMerlin("正在为你魔法改写，可以返回用户页进行其它任务");
+      setGlobalMerlinTip("正在为你魔法改写，可以返回用户页进行其它任务");
+      void runTransformAndPreview()
+        .then(() => {
+          const duration = generationStartRef.current
+            ? Math.max(1, Math.floor((Date.now() - generationStartRef.current) / 1000))
+            : 0;
+          const message = duration
+            ? `魔法题库已完成！耗时 ${duration} 秒`
+            : "魔法题库已完成！可以对应练习啦";
+          showMerlin(message);
+          setGlobalMerlinTip(message);
+        })
+        .catch(() => {
+          showMerlin("好像除了点问题...请稍后再试");
+          setGlobalMerlinTip("好像除了点问题...请稍后再试");
+        });
     } catch (error) {
-      setUploadError(error instanceof Error ? error.message : "上传解析失败");
+      const message = error instanceof Error ? error.message : "文本提交失败";
+      if (mountedRef.current) setUploadError(message);
+      showMerlin("好像除了点问题...请稍后再试");
     } finally {
-      setIsUploading(false);
-      event.target.value = "";
+      if (mountedRef.current) setIsGenerating(false);
     }
   };
 
-  const handleGenerate = () => {
-    if (isGenerating) {
-      return;
-    }
-    setIsGenerating(true);
-    window.setTimeout(() => setIsGenerating(false), 2400);
+  const getQuestionTypeLabel = (type: string) => {
+    const labels = {
+      grammar: '语法题',
+      reading: '阅读题',
+      listening: '听力题',
+    };
+    return labels[type as keyof typeof labels] || type;
   };
 
-  const [originalExample] = useState(
-    "Sample: The teacher asked Tom to read the story in the library after class."
-  );
-
-  const [transformedExample] = useState(
-    "Sample: Professor Willow asked Leo to read the spellbook in the Crystal Library after class at Arcane Academy."
-  );
+  const getQuestionTypeColor = (type: string) => {
+    const colors = {
+      grammar: 'var(--emerald-green)',
+      reading: 'var(--neon-gold)',
+      listening: 'var(--mystical-purple)',
+    };
+    return colors[type as keyof typeof colors] || 'var(--foreground)';
+  };
 
   return (
-    <div className="min-h-screen px-4 pt-6 pb-6">
-      <motion.header
-        className="mb-6"
+    <div className="min-h-screen p-8 relative">
+      <div className="max-w-6xl mx-auto">
+      {/* 顶部导航 */}
+      <motion.header 
+        className="mb-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-4">
-            <Link
+            <Link 
               href="/"
               className="w-10 h-10 glass-panel rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors"
             >
@@ -119,242 +337,185 @@ export default function AdminPage() {
             </Link>
             <div>
               <div className="flex items-center gap-2">
-                <h1 className="text-2xl" style={{ fontFamily: "var(--font-serif)" }}>
+                <h1 className="text-2xl" style={{ fontFamily: 'var(--font-serif)' }}>
                   MagicPaaS
                 </h1>
                 <span className="px-3 py-1 text-xs rounded-full bg-[var(--mystical-purple)]/20 text-[var(--mystical-purple)] border border-[var(--mystical-purple)]/30">
-                  IP 叙事引擎
+                  魔法题库生成器
                 </span>
               </div>
               <p className="text-xs text-[var(--muted-foreground)] mt-1">
-                当前 IP：哈利波特魔法世界
+                将普通题目转化为沉浸式魔法学习体验
               </p>
             </div>
           </div>
 
-          <div />
+          <Link 
+            href="/"
+            className="px-4 py-2 glass-panel rounded-2xl text-sm hover:bg-white/10 transition-colors"
+          >
+            返回用户页
+          </Link>
         </div>
       </motion.header>
 
-      <div className="grid grid-cols-[1.1fr_0.9fr] gap-4 -mt-2.5">
-        <motion.div
-          className="flex flex-col gap-4"
+      {/* 主内容区 - 固定高度防止页面无限延伸 */}
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-8 h-[calc(100vh-180px)]">
+        {/* 左侧 - 生成区 - 添加滚动容器 */}
+        <motion.div 
+          className="overflow-y-auto pr-2 h-full flex flex-col"
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <div className="glass-panel rounded-3xl p-4">
-            <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-              <BookOpen className="w-5 h-5 text-[var(--neon-gold)]" />
-              上传题目
-            </h3>
+          <div className="flex flex-col flex-1 gap-6 min-h-full max-w-[760px] mx-auto w-full">
+            {/* 输入方式选择 */}
+            <div className="glass-panel rounded-3xl p-6 flex flex-col flex-1">
+              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+                <Wand2 className="w-5 h-5 text-[var(--neon-gold)]" />
+                生成魔法题库
+              </h3>
 
-            <div className="mb-6">
-              <div
-                className="border-2 border-dashed border-white/20 rounded-2xl p-6 text-center hover:border-[var(--neon-gold)]/50 hover:bg-white/5 transition-all cursor-pointer"
-                onClick={handleFileClick}
-              >
-                <Upload className="w-12 h-12 text-[var(--muted-foreground)] mx-auto mb-3" />
-                <p className="text-sm font-semibold mb-1">
-                  {isUploading ? "解析中..." : "拖拽或点击上传"}
-                </p>
-                <p className="text-xs text-[var(--muted-foreground)]">支持 PDF / JPG / PNG 格式</p>
-              </div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="application/pdf,image/png,image/jpeg"
-                className="hidden"
-                onChange={handleFileChange}
-              />
-              {uploadError ? (
-                <p className="text-xs text-[#FF6B4A] mt-3">{uploadError}</p>
-              ) : null}
-            </div>
-
-            <div className="flex items-center gap-2 mb-4 px-4 py-2 rounded-xl bg-[var(--emerald-green)]/10 border border-[var(--emerald-green)]/30">
-              <div className="w-2 h-2 rounded-full bg-[var(--emerald-green)] animate-pulse" />
-              <span className="text-sm text-[var(--emerald-green)]">
-                已解析 {parsedData.length} 条数据
-              </span>
-              {parseSource ? (
-                <span className="ml-auto px-2 py-1 text-[10px] rounded-full bg-white/10 text-[var(--muted-foreground)] border border-white/10">
-                  {parseSource === "moonshot" ? "Kimi 抽取" : "规则抽取"}
-                </span>
-              ) : null}
-            </div>
-          </div>
-
-          <div className="glass-panel rounded-3xl p-5 overflow-hidden flex flex-col h-[360px]">
-            <h4 className="text-sm font-semibold mb-4 text-[var(--muted-foreground)]">
-              解析结果预览
-            </h4>
-
-            <div className="flex-1 overflow-y-auto">
-              <table className="w-full text-sm">
-                <thead className="sticky top-0 bg-[var(--mystical-navy)] z-10">
-                  <tr className="border-b border-white/10">
-                    <th className="text-left py-3 px-2 text-[var(--muted-foreground)] font-semibold">
-                      原始文本
-                    </th>
-                    <th className="text-left py-3 px-2 text-[var(--muted-foreground)] font-semibold">
-                      提取考点
-                    </th>
-                    <th className="text-center py-3 px-2 text-[var(--muted-foreground)] font-semibold">
-                      难度
-                    </th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {parsedData.map((row) => (
-                    <tr
-                      key={row.id}
-                      className="border-b border-white/5 hover:bg-white/5 transition-colors"
-                    >
-                      <td className="py-3 px-2 text-xs max-w-[240px]">
-                        <div className="relative">
-                          {row.isNew ? (
-                            <span className="absolute -top-2 -left-2 px-2 py-0.5 text-[10px] rounded-full bg-[var(--neon-gold)]/20 text-[var(--neon-gold)] border border-[var(--neon-gold)]/30">
-                              新增
-                            </span>
-                          ) : null}
-                          {row.originalText}
-                        </div>
-                      </td>
-                      <td className="py-3 px-2">
-                        <div className="flex flex-wrap gap-1">
-                          {row.knowledgePoints.map((point, idx) => (
-                            <span
-                              key={idx}
-                              className="px-2 py-1 text-xs rounded-lg bg-[var(--mystical-purple)]/20 text-[var(--mystical-purple)] border border-[var(--mystical-purple)]/30 flex items-center gap-1"
-                            >
-                              <Tag className="w-3 h-3" />
-                              {point}
-                            </span>
-                          ))}
-                        </div>
-                      </td>
-                      <td className="py-3 px-2 text-center">
-                        <div className="flex items-center justify-center gap-1">
-                          {[...Array(5)].map((_, i) => (
-                            <div
-                              key={i}
-                              className={`w-2 h-2 rounded-full ${
-                                i < row.difficulty
-                                  ? "bg-[var(--neon-gold)]"
-                                  : "bg-white/10"
-                              }`}
-                            />
-                          ))}
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </motion.div>
-
-        <motion.div
-          className="flex flex-col gap-4"
-          initial={{ opacity: 0, x: 30 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          <div className="flex-1 glass-panel rounded-3xl p-5 flex flex-col">
-            <h4 className="text-sm font-semibold mb-4 flex items-center gap-2">
-              <Sparkles className="w-4 h-4 text-[var(--neon-gold)]" />
-              魔法改写对比
-            </h4>
-
-            <div className="flex-1 grid grid-rows-2 gap-4">
-              <div className="glass-panel rounded-2xl p-4 flex flex-col">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold text-[var(--muted-foreground)]">
-                    原始题目
-                  </span>
-                  <span className="px-2 py-1 text-xs rounded-lg bg-white/5">
-                    Standard
-                  </span>
-                </div>
-                <div className="flex-1 text-sm leading-relaxed overflow-y-auto">
-                  {originalExample}
-                </div>
-              </div>
-
-              <div className="glass-panel-gold rounded-2xl p-4 flex flex-col relative overflow-hidden">
-                <motion.div
-                  className="absolute top-0 right-0 w-20 h-20 bg-[var(--neon-gold)] blur-3xl opacity-20"
-                  animate={{
-                    scale: [1, 1.5, 1],
-                    opacity: [0.2, 0.4, 0.2]
+              {/* 文本输入区 */}
+              <div className="flex flex-col flex-1 min-h-0">
+                <textarea
+                  value={textInput}
+                  onChange={(e) => setTextInput(e.target.value)}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter") return;
+                    if (event.shiftKey) return;
+                    event.preventDefault();
+                    handleGenerate();
                   }}
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity
-                  }}
+                  placeholder="例如：请生成 8 道语法题，考点是虚拟语气，难度 3，四选一，答案用 A/B/C/D。"
+                  className="w-full flex-1 min-h-[160px] px-4 py-3 glass-panel rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50"
                 />
+                {uploadError ? (
+                  <p className="text-xs text-[#FF6B4A] mt-3">{uploadError}</p>
+                ) : null}
+              </div>
 
-                <div className="flex items-center justify-between mb-2 relative z-10">
-                  <span className="text-xs font-semibold text-[var(--neon-gold)]">
-                    魔法渲染后
-                  </span>
-                  <span className="px-2 py-1 text-xs rounded-lg bg-[var(--neon-gold)]/20 text-[var(--neon-gold)] border border-[var(--neon-gold)]/30">
-                    Magical ✨
-                  </span>
-                </div>
-                <div className="flex-1 text-sm leading-relaxed overflow-y-auto relative z-10">
-                  {transformedExample}
-                </div>
+              <div className="mt-6">
+                <motion.button
+                  onClick={handleGenerate}
+                  disabled={isGenerating || !textInput.trim()}
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-[var(--neon-gold)] to-[var(--emerald-green)] text-[var(--mystical-navy)] font-semibold text-lg flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  whileHover={!isGenerating && textInput.trim() ? { scale: 1.02 } : {}}
+                  whileTap={!isGenerating && textInput.trim() ? { scale: 0.98 } : {}}
+                >
+                  {isGenerating ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      <span className="relative z-10">
+                        魔法生成中{elapsedSeconds ? `（已 ${elapsedSeconds} 秒）` : "..."}
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-5 h-5" />
+                      <span className="relative z-10">生成魔法题库</span>
+                    </>
+                  )}
+                </motion.button>
               </div>
             </div>
 
-            <motion.button
-              className="mt-4 w-full py-4 rounded-2xl bg-[var(--neon-gold)] text-[var(--mystical-navy)] font-semibold text-lg flex items-center justify-center gap-3 relative overflow-hidden"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={handleGenerate}
-              disabled={isGenerating}
-            >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                animate={{
-                  x: ["-100%", "200%"]
-                }}
-                transition={{
-                  duration: 2,
-                  repeat: Infinity,
-                  ease: "linear"
-                }}
-              />
-              {isGenerating ? (
+            {/* 解析结果预览 - 仅在生成成功后显示 */}
+            <AnimatePresence>
+              {generatedQuestions.length > 0 && (
                 <motion.div
-                  className="absolute inset-0 bg-[var(--neon-gold)]/15"
-                  animate={{ opacity: [0.2, 0.5, 0.2] }}
-                  transition={{ duration: 1.4, repeat: Infinity }}
-                />
-              ) : null}
-              {isGenerating ? (
-                <span className="relative z-10 flex items-center gap-2">
-                  <motion.span
-                    className="inline-flex"
-                    animate={{ rotate: [0, 12, -12, 0] }}
-                    transition={{ duration: 1.2, repeat: Infinity }}
-                  >
-                    <Sparkles className="w-5 h-5" />
-                  </motion.span>
-                  魔法题库构建中...
-                </span>
-              ) : (
-                <span className="relative z-10 flex items-center gap-2">
-                  <Sparkles className="w-5 h-5" />
-                  构建属于你的魔法题库
-                </span>
+                  className="glass-panel rounded-3xl p-6"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 20 }}
+                >
+                  <div className="flex items-center justify-between mb-4">
+                    <h4 className="text-lg font-semibold flex items-center gap-2">
+                      <Check className="w-5 h-5 text-[var(--emerald-green)]" />
+                      生成成功
+                    </h4>
+                    <span className="text-sm text-[var(--muted-foreground)]">
+                      预览前 {Math.min(generatedQuestions.length, 3)} 条
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    {generatedQuestions.slice(0, 3).map((q) => (
+                      <motion.div
+                        key={q.id}
+                        className="glass-panel rounded-2xl p-4"
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: q.id * 0.1 }}
+                      >
+                        {/* 题目类型标签 */}
+                        <div className="flex items-center gap-2 mb-3">
+                          <span 
+                            className="px-3 py-1 text-xs rounded-full font-semibold"
+                            style={{
+                              background: `${getQuestionTypeColor(q.type)}20`,
+                              color: getQuestionTypeColor(q.type),
+                              border: `1px solid ${getQuestionTypeColor(q.type)}30`,
+                            }}
+                          >
+                            {getQuestionTypeLabel(q.type)}
+                          </span>
+                          <span className="text-xs text-[var(--muted-foreground)]">
+                            #{q.id}
+                          </span>
+                        </div>
+
+                        {/* 阅读材料（如果有） */}
+                        {q.material && (
+                          <div className="mb-3 p-3 rounded-xl bg-white/5 border border-white/10">
+                            <p className="text-xs font-semibold text-[var(--muted-foreground)] mb-2">
+                              阅读材料：
+                            </p>
+                            <p className="text-sm text-[var(--foreground)]/80 line-clamp-2">
+                              {q.material}
+                            </p>
+                          </div>
+                        )}
+
+                        {/* 题目 */}
+                        <p className="text-sm font-medium mb-3">
+                          {q.question}
+                        </p>
+
+                        {/* 选项 */}
+                        {q.options && (
+                          <div className="grid grid-cols-2 gap-2">
+                            {q.options.map((option, idx) => (
+                              <div
+                                key={idx}
+                                className="px-3 py-2 rounded-xl bg-white/5 text-xs flex items-center gap-2"
+                              >
+                                <span className="font-bold text-[var(--neon-gold)]">
+                                  {String.fromCharCode(65 + idx)}.
+                                </span>
+                                <span>{option}</span>
+                              </div>
+                            ))}
+                          </div>
+                        )}
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
               )}
-            </motion.button>
+            </AnimatePresence>
           </div>
         </motion.div>
+
+        {/* 右侧 - 梅林助手 */}
+        <div className="flex flex-col h-full">
+          <MerlinAssistant 
+            showTip={showMerlinTip && Boolean(merlinMessage)}
+            message={merlinMessage}
+            onDismiss={() => setShowMerlinTip(false)}
+          />
+        </div>
+      </div>
       </div>
     </div>
   );

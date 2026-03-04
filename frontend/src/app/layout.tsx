@@ -2,6 +2,7 @@ import type { CSSProperties, ReactNode } from "react";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import BgmController from "../figma/components/BgmController";
+import MerlinGlobalTip from "../figma/components/MerlinGlobalTip";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -32,6 +33,7 @@ export default function RootLayout({ children }: { children: ReactNode }) {
         }
       >
         {children}
+        <MerlinGlobalTip />
         <BgmController />
       </body>
     </html>

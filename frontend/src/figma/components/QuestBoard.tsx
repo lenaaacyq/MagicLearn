@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { BookOpen, Flame, Lock, Volume2, Wand2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -96,9 +96,21 @@ function QuestCard({
 
 export default function QuestBoard() {
   const router = useRouter();
-  const listeningTotal = useMemo(() => getQuestionItems("listening").length, []);
-  const grammarTotal = useMemo(() => getQuestionItems("grammar").length, []);
-  const readingTotal = useMemo(() => getQuestionItems("reading").length, []);
+  const [listeningTotal, setListeningTotal] = useState(() => getQuestionItems("listening").length);
+  const [grammarTotal, setGrammarTotal] = useState(() => getQuestionItems("grammar").length);
+  const [readingTotal, setReadingTotal] = useState(() => getQuestionItems("reading").length);
+  useEffect(() => {
+    const refresh = () => {
+      setListeningTotal(getQuestionItems("listening").length);
+      setGrammarTotal(getQuestionItems("grammar").length);
+      setReadingTotal(getQuestionItems("reading").length);
+    };
+    refresh();
+    window.addEventListener("magic-user-question-updated", refresh);
+    return () => {
+      window.removeEventListener("magic-user-question-updated", refresh);
+    };
+  }, []);
   const [progress, setProgress] = useState({ listening: 0, grammar: 0, reading: 0 });
 
   useEffect(() => {
@@ -172,7 +184,7 @@ export default function QuestBoard() {
 
         <QuestCard
           title="咒语语法课"
-          subtitle="Spell Grammar · Practice"
+          subtitle="spell practice - Grammar"
           icon={<Wand2 className="w-6 h-6 text-[var(--emerald-green)]" />}
           status="progress"
           glowColor="var(--emerald-green)"

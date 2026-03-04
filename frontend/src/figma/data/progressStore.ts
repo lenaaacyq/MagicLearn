@@ -1,3 +1,5 @@
+import { markUserQuestionSeen } from "./questionBank";
+
 export type QuestionType = "grammar" | "reading" | "listening";
 
 type ProgressData = Record<QuestionType, string[]>;
@@ -46,6 +48,7 @@ export const markQuestionComplete = (type: QuestionType, questionId: string) => 
     [type]: Array.from(list)
   };
   writeProgress(updated);
+  markUserQuestionSeen(type, questionId);
   return updated;
 };
 

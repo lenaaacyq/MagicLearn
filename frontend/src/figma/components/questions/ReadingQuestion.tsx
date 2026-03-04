@@ -20,7 +20,15 @@ export default function ReadingQuestion({ onComplete }: ReadingQuestionProps) {
   const wrongSfxRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  const items = useMemo(() => getQuestionItems("reading"), []);
+  const [items, setItems] = useState(() => getQuestionItems("reading"));
+  useEffect(() => {
+    const refresh = () => setItems(getQuestionItems("reading"));
+    refresh();
+    window.addEventListener("magic-user-question-updated", refresh);
+    return () => {
+      window.removeEventListener("magic-user-question-updated", refresh);
+    };
+  }, []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const total = items.length;
   const current = items[currentIndex];
@@ -243,8 +251,13 @@ export default function ReadingQuestion({ onComplete }: ReadingQuestionProps) {
                 <div className="flex flex-col gap-6 h-[62vh] justify-start">
                   <div className="glass-panel rounded-3xl p-5">
                     <div className="flex items-center justify-between gap-4 mb-2">
-                      <div className="text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
-                        Reading Question
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
+                        <span>Reading Question</span>
+                        {current.isNew && (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[var(--neon-gold)]/20 text-[var(--neon-gold)] border border-[var(--neon-gold)]/30">
+                            NEW
+                          </span>
+                        )}
                       </div>
                       <div className="text-xs text-[var(--muted-foreground)]">
                         {currentIndex + 1} / {total}

@@ -193,11 +193,54 @@ def list_knowledge() -> list[dict[str, Any]]:
         return results
 
 
+def list_untransformed_knowledge(limit: int | None = None) -> list[dict[str, Any]]:
+    init_db()
+    with get_connection() as connection:
+        cursor = connection.cursor()
+        sql = """
+        SELECT kb.*
+        FROM knowledge_base kb
+        WHERE NOT EXISTS (
+            SELECT 1 FROM ip_content ip WHERE ip.source_id = kb.id
+        )
+        ORDER BY kb.id DESC
+        """
+        params: list[Any] = []
+        if limit is not None:
+            sql += f" LIMIT {_placeholder()}"
+            params.append(int(limit))
+        cursor.execute(sql, params)
+        rows = cursor.fetchall()
+        results: list[dict[str, Any]] = []
+        for row in rows:
+            tags = json.loads(row["tags"]) if row["tags"] else []
+            results.append(
+                {
+                    "id": row["id"],
+                    "text": row["text"],
+                    "focus": row["focus"],
+                    "difficulty": row["difficulty"],
+                    "type": row["type"],
+                    "answer": row["answer"],
+                    "tags": tags,
+                    "notes": row["notes"],
+                }
+            )
+        return results
+
+
 def upsert_ip_content(pairs: list[dict[str, Any]]) -> int:
     init_db()
     with get_connection() as connection:
         cursor = connection.cursor()
         for pair in pairs:
+            cursor.execute(
+                f"""
+                DELETE FROM ip_content
+                WHERE source_id = {_placeholder()}
+                """,
+                (pair["source_id"],),
+            )
             cursor.execute(
                 f"""
                 INSERT INTO ip_content (source_id, ip_text)

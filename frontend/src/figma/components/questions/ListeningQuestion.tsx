@@ -33,7 +33,15 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
   const wrongSfxRef = useRef<HTMLAudioElement | null>(null);
   const audioContextRef = useRef<AudioContext | null>(null);
 
-  const items = useMemo(() => getQuestionItems("listening"), []);
+  const [items, setItems] = useState(() => getQuestionItems("listening"));
+  useEffect(() => {
+    const refresh = () => setItems(getQuestionItems("listening"));
+    refresh();
+    window.addEventListener("magic-user-question-updated", refresh);
+    return () => {
+      window.removeEventListener("magic-user-question-updated", refresh);
+    };
+  }, []);
   const introMessage = useMemo(() => "🪄 仔细辨认风中的魔法回音，提取关键的线索。", []);
   const correctMessage = useMemo(() => "✨ 你成功破译了魔法密语，太敏锐了！", []);
   const incorrectMessage = useMemo(() => "🔮 咒语破译失败，深呼吸调整状态，", []);
@@ -444,8 +452,13 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
                 >
                   <div className="glass-panel rounded-3xl p-5">
                     <div className="flex items-center justify-between gap-4 mb-2">
-                      <div className="text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
-                        Listening Question
+                      <div className="flex items-center gap-2 text-xs uppercase tracking-widest text-[var(--muted-foreground)]">
+                        <span>Listening Question</span>
+                        {current.isNew && (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-semibold bg-[var(--neon-gold)]/20 text-[var(--neon-gold)] border border-[var(--neon-gold)]/30">
+                            NEW
+                          </span>
+                        )}
                       </div>
                       <div className="text-xs text-[var(--muted-foreground)]">
                         {currentIndex + 1} / {total}
