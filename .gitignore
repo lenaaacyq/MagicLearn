@@ -2,6 +2,11 @@
 .env.*
 frontend/.env.local
 frontend/.next
+frontend/.next-dev
 backend/app/data.db
+backend/tmp/
+backend.log
+.DS_Store
+**/.DS_Store
 node_modules
 dist

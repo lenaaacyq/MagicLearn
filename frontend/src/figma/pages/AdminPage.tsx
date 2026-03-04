@@ -196,6 +196,23 @@ export default function AdminPage() {
     setSlowNotified(false);
     showMerlin("正在为你魔法改写，可以返回用户页进行其它任务");
     try {
+      const debugUrl = process.env.NEXT_PUBLIC_DEBUG_SERVER_URL;
+      const traceId = `upload-${Date.now()}`;
+      // #region debug-point A:upload-text-start
+      if (debugUrl) {
+        fetch(debugUrl, {
+          method: "POST",
+          body: JSON.stringify({
+            sessionId: "upload-text-1",
+            runId: "pre-fix",
+            hypothesisId: "A",
+            location: "AdminPage.tsx:handleGenerate:start",
+            msg: "[DEBUG] upload-text start",
+            data: { traceId, textLen: content.length }
+          })
+        }).catch(() => {});
+      }
+      // #endregion
       const response = await fetch("/api/knowledge-base/upload-text", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -208,6 +225,21 @@ export default function AdminPage() {
       } else {
         data = await response.json();
       }
+      // #region debug-point B:upload-text-response
+      if (debugUrl) {
+        fetch(debugUrl, {
+          method: "POST",
+          body: JSON.stringify({
+            sessionId: "upload-text-1",
+            runId: "pre-fix",
+            hypothesisId: "B",
+            location: "AdminPage.tsx:handleGenerate:response",
+            msg: "[DEBUG] upload-text response",
+            data: { traceId, status: response.status, ok: response.ok, errorText }
+          })
+        }).catch(() => {});
+      }
+      // #endregion
       if (isListeningRequest) {
         const elapsed = Date.now() - startTime;
         const waitMs = Math.max(0, 30000 - elapsed);
