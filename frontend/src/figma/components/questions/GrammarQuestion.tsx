@@ -172,16 +172,7 @@ export default function GrammarQuestion({ onComplete }: GrammarQuestionProps) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      <div
-        className="absolute inset-0"
-        style={{
-          backgroundImage: "url('/images/figma-bg/aibg1.png')",
-          backgroundSize: "cover",
-          backgroundPosition: "center 4%",
-          backgroundRepeat: "no-repeat",
-          filter: "blur(2px) brightness(0.82)"
-        }}
-      >
+      <div className="absolute inset-0 kb-bg-base kb-bg-grammar">
         <div className="absolute inset-0 bg-[var(--mystical-navy)]/70" />
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(138,43,226,0.4),transparent_55%)]" />
       </div>

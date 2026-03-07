@@ -25,6 +25,54 @@ body {
   opacity: 0.9;
 }
 
+.kb-bg-base {
+  background-size: cover;
+  background-repeat: no-repeat;
+  filter: blur(2px) brightness(0.82);
+}
+
+.kb-bg-grammar {
+  background-image: url("/images/figma-bg/aibg1.png");
+  background-position: center 4%;
+}
+
+.kb-bg-reading {
+  background-image: url("/images/figma-bg/aibg2.png");
+  background-position: center -22%;
+}
+
+.kb-bg-listening {
+  background-image: url("/images/figma-bg/aibg3.png");
+  background-position: center -20%;
+}
+
+@supports (background-image: image-set(url("/images/figma-bg/aibg1.webp") type("image/webp") 1x)) {
+  .kb-bg-grammar {
+    background-image: image-set(
+      url("/images/figma-bg/aibg1.webp") type("image/webp") 1x,
+      url("/images/figma-bg/aibg1.png") type("image/png") 1x
+    );
+  }
+}
+
+@supports (background-image: image-set(url("/images/figma-bg/aibg2.webp") type("image/webp") 1x)) {
+  .kb-bg-reading {
+    background-image: image-set(
+      url("/images/figma-bg/aibg2.webp") type("image/webp") 1x,
+      url("/images/figma-bg/aibg2.png") type("image/png") 1x
+    );
+  }
+}
+
+@supports (background-image: image-set(url("/images/figma-bg/aibg3.webp") type("image/webp") 1x)) {
+  .kb-bg-listening {
+    background-image: image-set(
+      url("/images/figma-bg/aibg3.webp") type("image/webp") 1x,
+      url("/images/figma-bg/aibg3.png") type("image/png") 1x
+    );
+  }
+}
+
 .magic-bg::after {
   content: "";
   position: absolute;
