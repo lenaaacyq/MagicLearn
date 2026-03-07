@@ -151,7 +151,7 @@ export default function AdminPage() {
 
   const setGlobalMerlinTip = (message: string) => {
     if (typeof window === "undefined") return;
-    window.localStorage.setItem(
+    window.sessionStorage.setItem(
       "magic_merlin_tip_v1",
       JSON.stringify({ message, updatedAt: Date.now() })
     );

@@ -12,7 +12,7 @@ const seenKey = "magic_merlin_tip_seen_at_v1";
 const readPayload = (): Payload | null => {
   if (typeof window === "undefined") return null;
   try {
-    const raw = window.localStorage.getItem(storageKey);
+    const raw = window.sessionStorage.getItem(storageKey);
     if (!raw) return null;
     const parsed = JSON.parse(raw);
     if (!parsed || typeof parsed !== "object") return null;
@@ -56,15 +56,8 @@ export default function MerlinGlobalTip() {
     };
 
     apply();
-    const onStorage = (event: StorageEvent) => {
-      if (event.key !== storageKey) return;
-      apply();
-    };
-
-    window.addEventListener("storage", onStorage);
     const timer = window.setInterval(apply, 1000);
     return () => {
-      window.removeEventListener("storage", onStorage);
       window.clearInterval(timer);
     };
   }, [lastSeenRef]);
