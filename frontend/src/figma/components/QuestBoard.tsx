@@ -150,7 +150,7 @@ export default function QuestBoard() {
 
         <div className="relative z-10">
           <h2 className="text-2xl mb-4 flex items-baseline gap-3" style={{ fontFamily: "var(--font-serif)" }}>
-            <span>The Prophecy Daily</span>
+            <span>Learn with Your Own Magic</span>
           </h2>
 
           <div className="flex items-center gap-8">
