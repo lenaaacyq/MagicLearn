@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { BookOpen, Sparkles, X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -21,14 +21,16 @@ export default function ReadingQuestion({ onComplete }: ReadingQuestionProps) {
   const audioContextRef = useRef<AudioContext | null>(null);
 
   const [items, setItems] = useState(() => getQuestionItems("reading"));
+  const refresh = useCallback(() => {
+    setItems(getQuestionItems("reading"));
+  }, []);
   useEffect(() => {
-    const refresh = () => setItems(getQuestionItems("reading"));
     refresh();
     window.addEventListener("magic-user-question-updated", refresh);
     return () => {
       window.removeEventListener("magic-user-question-updated", refresh);
     };
-  }, []);
+  }, [refresh]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const total = items.length;
   const current = items[currentIndex];
@@ -53,9 +55,15 @@ export default function ReadingQuestion({ onComplete }: ReadingQuestionProps) {
     }
     return message;
   }, [current, introIcons, introIndex]);
+  const currentGroupId = current?.groupId;
+  const currentId = current?.id;
 
   useEffect(() => {
-    if (!current) return;
+    if (!introMessage) {
+      setDisplayText("");
+      setIsTyping(false);
+      return;
+    }
     const fullText = introMessage;
     let index = 0;
     setDisplayText("");
@@ -72,13 +80,13 @@ export default function ReadingQuestion({ onComplete }: ReadingQuestionProps) {
     }, 30);
 
     return () => clearInterval(timer);
-  }, [introMessage, current?.groupId]);
+  }, [introMessage, currentGroupId]);
 
   useEffect(() => {
-    if (!current) return;
+    if (!currentId) return;
     setSelectedOption(null);
     setIsAnswered(false);
-  }, [current?.id]);
+  }, [currentId]);
 
   useEffect(() => {
     wrongSfxRef.current = new Audio("/audio/sfx-wrong.ogg");

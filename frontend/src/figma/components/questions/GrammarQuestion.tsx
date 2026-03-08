@@ -56,6 +56,7 @@ export default function GrammarQuestion({ onComplete }: GrammarQuestionProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const total = items.length;
   const current = items[currentIndex];
+  const currentId = current?.id;
 
   const runTyping = (fullText: string) => {
     if (typingTimer.current) {
@@ -78,7 +79,7 @@ export default function GrammarQuestion({ onComplete }: GrammarQuestionProps) {
   };
 
   useEffect(() => {
-    if (!current) return;
+    if (!currentId) return;
     runTyping(introMessage);
     setSelectedOption(null);
     setIsAnswered(false);
@@ -87,7 +88,7 @@ export default function GrammarQuestion({ onComplete }: GrammarQuestionProps) {
         clearInterval(typingTimer.current);
       }
     };
-  }, [current?.id, introMessage]);
+  }, [currentId, introMessage]);
 
   useEffect(() => {
     wrongSfxRef.current = new Audio("/audio/sfx-wrong.ogg");

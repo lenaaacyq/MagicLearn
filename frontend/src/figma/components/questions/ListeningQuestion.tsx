@@ -48,6 +48,8 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
   const [currentIndex, setCurrentIndex] = useState(0);
   const total = items.length;
   const current = items[currentIndex];
+  const currentId = current?.id;
+  const currentAudioSrc = current?.material?.audio?.src ?? null;
 
   const runTyping = (fullText: string) => {
     if (typingTimer.current) {
@@ -98,20 +100,19 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
   const rightName = "M";
 
   useEffect(() => {
-    if (!current) return;
+    if (!currentId) return;
     setAudioDurationMs(null);
     setAudioErrorMessage(null);
     setHasUserStarted(false);
-    const src = current.material?.audio?.src ?? null;
-    if (src) {
-      setAudioSrc(src);
+    if (currentAudioSrc) {
+      setAudioSrc(currentAudioSrc);
       setAudioStatus("loading");
       return;
     }
     setAudioStatus("error");
     setAudioErrorMessage("音频资源缺失，请刷新重试");
     setAudioSrc(null);
-  }, [current?.id]);
+  }, [currentId, currentAudioSrc]);
 
   useEffect(() => {
     wrongSfxRef.current = new Audio("/audio/sfx-wrong.ogg");
@@ -186,7 +187,7 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
   }, [audioSrc]);
 
   useEffect(() => {
-    if (!current) return;
+    if (!currentId) return;
     if (audioStatus === "error") {
       setPlayState("playing-first");
       setShowToast(false);
@@ -238,7 +239,7 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
     return () => {
       timersRef.current.forEach((id) => window.clearTimeout(id));
     };
-  }, [current?.id, playSequence, audioStatus, hasUserStarted]);
+  }, [currentId, playSequence, audioStatus, hasUserStarted]);
 
   useEffect(() => {
     if (playState === "ready" && audioRef.current) {
@@ -247,14 +248,14 @@ export default function ListeningQuestion({ onComplete }: ListeningQuestionProps
   }, [playState]);
 
   useEffect(() => {
-    if (!showQuestion || !current) return;
+    if (!showQuestion || !currentId) return;
     runTyping(introMessage);
     return () => {
       if (typingTimer.current) {
         clearInterval(typingTimer.current);
       }
     };
-  }, [showQuestion, introMessage, current?.id]);
+  }, [showQuestion, introMessage, currentId]);
 
   const handleOptionClick = (optionId: string) => {
     if (isAnswered) return;

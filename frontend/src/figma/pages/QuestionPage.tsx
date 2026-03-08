@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import GrammarQuestion from "../components/questions/GrammarQuestion";
 import ListeningQuestion from "../components/questions/ListeningQuestion";
 import ReadingQuestion from "../components/questions/ReadingQuestion";
@@ -13,9 +13,9 @@ interface QuestionPageProps {
 export default function QuestionPage({ type }: QuestionPageProps) {
   const router = useRouter();
 
-  const handleComplete = () => {
+  const handleComplete = useCallback(() => {
     router.push("/");
-  };
+  }, [router]);
 
   const content = useMemo(() => {
     switch (type) {
@@ -28,7 +28,7 @@ export default function QuestionPage({ type }: QuestionPageProps) {
       default:
         return <GrammarQuestion onComplete={handleComplete} />;
     }
-  }, [type]);
+  }, [type, handleComplete]);
 
   return <div className="min-h-screen">{content}</div>;
 }

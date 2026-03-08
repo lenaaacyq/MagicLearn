@@ -112,7 +112,6 @@ export default function MerlinGenerator() {
   const [inputText, setInputText] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
   const [uploadError, setUploadError] = useState<string | null>(null);
-  const [generatedCount, setGeneratedCount] = useState<number | null>(null);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [slowNotified, setSlowNotified] = useState(false);
   const mountedRef = useRef(true);
@@ -161,7 +160,6 @@ export default function MerlinGenerator() {
     const isListeningRequest = /听力/i.test(content) || /listening/i.test(content);
     if (mountedRef.current) setUploadError(null);
     setIsGenerating(true);
-    setGeneratedCount(null);
     const startTime = Date.now();
     generationStartRef.current = startTime;
     setElapsedSeconds(0);
@@ -236,7 +234,6 @@ export default function MerlinGenerator() {
       if (items.length) {
         saveUserQuestionItems(items);
       }
-      setGeneratedCount(records.length);
       if (mountedRef.current) {
         setInputText("");
       }
@@ -260,12 +257,6 @@ export default function MerlinGenerator() {
       if (mountedRef.current) setIsGenerating(false);
     }
   };
-
-  const statusText = uploadError
-    ? uploadError
-    : generatedCount !== null
-      ? `已生成 ${generatedCount} 条题目`
-      : "把需求告诉梅林，他会帮你生成专属题库";
 
   return (
     <motion.div
