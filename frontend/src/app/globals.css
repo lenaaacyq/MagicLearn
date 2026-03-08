@@ -327,6 +327,17 @@ html {
   font-size: var(--font-size);
 }
 
+@media (max-width: 768px) {
+  :root {
+    --font-size: 14px;
+    --radius: 1.1rem;
+  }
+
+  body {
+    background-attachment: scroll;
+  }
+}
+
 h1 {
   font-family: var(--font-serif);
   font-size: 2.5rem;

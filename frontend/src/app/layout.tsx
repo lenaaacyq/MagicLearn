@@ -19,6 +19,12 @@ export const metadata = {
   description: "面向 Gen Z/Alpha 的沉浸式英语学习体验"
 };
 
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover"
+};
+
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="zh">

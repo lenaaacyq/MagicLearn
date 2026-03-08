@@ -351,16 +351,16 @@ export default function AdminPage() {
   };
 
   return (
-    <div className="min-h-screen p-8 relative">
+    <div className="min-h-screen p-4 sm:p-6 lg:p-8 relative">
       <div className="max-w-6xl mx-auto">
       {/* 顶部导航 */}
       <motion.header 
-        className="mb-8"
+        className="mb-6 lg:mb-8"
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-4">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
             <Link 
               href="/"
               className="w-10 h-10 glass-panel rounded-xl flex items-center justify-center hover:bg-white/10 transition-colors"
@@ -384,7 +384,7 @@ export default function AdminPage() {
 
           <Link 
             href="/"
-            className="px-4 py-2 glass-panel rounded-2xl text-sm hover:bg-white/10 transition-colors"
+            className="px-4 py-2 glass-panel rounded-2xl text-sm hover:bg-white/10 transition-colors self-start lg:self-auto"
           >
             返回用户页
           </Link>
@@ -392,18 +392,18 @@ export default function AdminPage() {
       </motion.header>
 
       {/* 主内容区 - 固定高度防止页面无限延伸 */}
-      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-8 h-[calc(100vh-180px)]">
+      <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_360px] gap-6 lg:gap-8 lg:h-[calc(100vh-180px)]">
         {/* 左侧 - 生成区 - 添加滚动容器 */}
         <motion.div 
-          className="overflow-y-auto pr-2 h-full flex flex-col"
+          className="lg:overflow-y-auto lg:pr-2 lg:h-full flex flex-col"
           initial={{ opacity: 0, x: -30 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ delay: 0.1 }}
         >
-          <div className="flex flex-col flex-1 gap-6 min-h-full max-w-[760px] mx-auto w-full">
+          <div className="flex flex-col flex-1 gap-6 lg:min-h-full max-w-[760px] lg:mx-auto w-full">
             {/* 输入方式选择 */}
-            <div className="glass-panel rounded-3xl p-6 flex flex-col flex-1">
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <div className="glass-panel rounded-3xl p-5 sm:p-6 flex flex-col flex-1">
+              <h3 className="text-lg sm:text-xl font-semibold mb-4 flex items-center gap-2">
                 <Wand2 className="w-5 h-5 text-[var(--neon-gold)]" />
                 生成魔法题库
               </h3>
@@ -420,7 +420,7 @@ export default function AdminPage() {
                     handleGenerate();
                   }}
                   placeholder="例如：请生成 8 道语法题，考点是虚拟语气，难度 3，四选一，答案用 A/B/C/D。"
-                  className="w-full flex-1 min-h-[160px] px-4 py-3 glass-panel rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50"
+                  className="w-full flex-1 min-h-[140px] lg:min-h-[160px] px-4 py-3 glass-panel rounded-2xl text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50"
                 />
                 {uploadError ? (
                   <p className="text-xs text-[#FF6B4A] mt-3">{uploadError}</p>
@@ -431,7 +431,7 @@ export default function AdminPage() {
                 <motion.button
                   onClick={handleGenerate}
                   disabled={isGenerating || !textInput.trim()}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-[var(--neon-gold)] to-[var(--emerald-green)] text-[var(--mystical-navy)] font-semibold text-lg flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="w-full py-3 sm:py-4 rounded-2xl bg-gradient-to-r from-[var(--neon-gold)] to-[var(--emerald-green)] text-[var(--mystical-navy)] font-semibold text-base sm:text-lg flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
                   whileHover={!isGenerating && textInput.trim() ? { scale: 1.02 } : {}}
                   whileTap={!isGenerating && textInput.trim() ? { scale: 0.98 } : {}}
                 >
@@ -456,13 +456,13 @@ export default function AdminPage() {
             <AnimatePresence>
               {generatedQuestions.length > 0 && (
                 <motion.div
-                  className="glass-panel rounded-3xl p-6"
+                  className="glass-panel rounded-3xl p-5 sm:p-6"
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: 20 }}
                 >
                   <div className="flex items-center justify-between mb-4">
-                    <h4 className="text-lg font-semibold flex items-center gap-2">
+                    <h4 className="text-base sm:text-lg font-semibold flex items-center gap-2">
                       <Check className="w-5 h-5 text-[var(--emerald-green)]" />
                       生成成功
                     </h4>
@@ -516,7 +516,7 @@ export default function AdminPage() {
 
                         {/* 选项 */}
                         {q.options && (
-                          <div className="grid grid-cols-2 gap-2">
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                             {q.options.map((option, idx) => (
                               <div
                                 key={idx}
@@ -540,7 +540,7 @@ export default function AdminPage() {
         </motion.div>
 
         {/* 右侧 - 梅林助手 */}
-        <div className="flex flex-col h-full">
+        <div className="flex flex-col lg:h-full">
           <MerlinAssistant 
             showTip={showMerlinTip && Boolean(merlinMessage)}
             message={merlinMessage}
