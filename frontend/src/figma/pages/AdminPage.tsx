@@ -445,7 +445,7 @@ export default function AdminPage() {
                   ) : (
                     <>
                       <Sparkles className="w-5 h-5" />
-                      <span className="relative z-10">生成魔法题库</span>
+                      <span className="relative z-10">生成题目</span>
                     </>
                   )}
                 </motion.button>
