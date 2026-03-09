@@ -72,7 +72,7 @@ export default function MerlinGlobalTip() {
     <AnimatePresence>
       {open && payload ? (
         <motion.div
-          className="fixed top-[calc(12px+env(safe-area-inset-top))] left-4 right-4 z-50 pointer-events-auto max-w-[calc(100vw-2rem)] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[340px]"
+          className="fixed top-[calc(12px+env(safe-area-inset-top))] left-1/2 -translate-x-1/2 z-50 pointer-events-auto w-max max-w-[calc(100vw-2rem)]"
           initial={{ opacity: 0, y: -16, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: -16, scale: 0.98 }}
@@ -87,7 +87,7 @@ export default function MerlinGlobalTip() {
             >
               <X className="w-4 h-4" />
             </button>
-            <div className="flex items-start gap-3 pr-8">
+            <div className="flex items-center gap-3 pr-8">
               <div className="w-10 h-10 rounded-2xl glass-panel flex items-center justify-center text-2xl flex-shrink-0">
                 🧙‍♂️
               </div>
@@ -98,7 +98,7 @@ export default function MerlinGlobalTip() {
                     魔法导师 梅林
                   </span>
                 </div>
-                <p className="text-sm leading-relaxed text-[var(--foreground)]/90 break-words">
+                <p className="text-sm leading-relaxed text-[var(--foreground)]/90 whitespace-nowrap">
                   {payload.message}
                 </p>
               </div>
