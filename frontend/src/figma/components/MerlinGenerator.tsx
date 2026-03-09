@@ -348,9 +348,9 @@ export default function MerlinGenerator() {
         </motion.div>
       </div>
 
-      <div className="flex-1 flex flex-col z-10 mt-3 px-2 min-h-0 gap-3">
+      <div className="flex-1 flex flex-col z-10 mt-2 px-2 min-h-0 gap-3">
         <motion.div
-          className="relative w-[94%] mx-auto"
+          className="relative w-[92%] mx-auto"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.3 }}
@@ -365,7 +365,7 @@ export default function MerlinGenerator() {
               handleGenerate();
             }}
             placeholder="例如：请生成 8 道语法题，考点是虚拟语气，难度 3，四选一，答案用 A/B/C/D。"
-            className="w-full h-40 xl:h-44 glass-panel rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50 transition-colors placeholder:text-[var(--muted-foreground)]/50"
+            className="w-full h-32 xl:h-36 glass-panel rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50 transition-colors placeholder:text-[var(--muted-foreground)]/50"
           />
 
           <div className="absolute bottom-3 right-4 text-xs text-[var(--muted-foreground)]/50">
@@ -376,7 +376,7 @@ export default function MerlinGenerator() {
         <motion.button
           onClick={handleGenerate}
           disabled={isGenerating || !inputText.trim()}
-          className="w-[94%] mx-auto mt-auto py-3.5 rounded-2xl bg-gradient-to-r from-[var(--neon-gold)] to-[var(--emerald-green)] text-[var(--mystical-navy)] font-semibold text-lg flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-[92%] mx-auto mt-3 py-3.5 rounded-2xl bg-gradient-to-r from-[var(--neon-gold)] to-[var(--emerald-green)] text-[var(--mystical-navy)] font-semibold text-lg flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
