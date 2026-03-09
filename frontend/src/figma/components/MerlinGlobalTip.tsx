@@ -72,10 +72,10 @@ export default function MerlinGlobalTip() {
     <AnimatePresence>
       {open && payload ? (
         <motion.div
-          className="fixed left-4 right-4 bottom-[calc(95px+env(safe-area-inset-bottom))] z-50 pointer-events-auto max-w-[calc(100vw-2rem)] sm:left-auto sm:right-6 sm:bottom-[95px] sm:w-[340px]"
-          initial={{ opacity: 0, y: 16, scale: 0.98 }}
+          className="fixed top-[calc(12px+env(safe-area-inset-top))] left-4 right-4 z-50 pointer-events-auto max-w-[calc(100vw-2rem)] sm:left-1/2 sm:right-auto sm:-translate-x-1/2 sm:w-[340px]"
+          initial={{ opacity: 0, y: -16, scale: 0.98 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 16, scale: 0.98 }}
+          exit={{ opacity: 0, y: -16, scale: 0.98 }}
           transition={{ type: "spring", stiffness: 220, damping: 24 }}
         >
           <div className="glass-panel-gold rounded-3xl px-5 py-4 relative">
