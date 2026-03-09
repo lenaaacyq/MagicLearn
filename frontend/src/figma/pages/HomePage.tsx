@@ -32,12 +32,12 @@ export default function HomePage() {
       {/* 主内容区 - Bento 布局 */}
       <div className="pt-28 pb-32 h-screen flex gap-6">
         {/* 左侧 - Agent 伴随舱 */}
-        <div className="w-[40%]">
+        <div className="w-[40%] min-h-0">
           <MerlinGenerator />
         </div>
 
         {/* 右侧 - 任务看板 */}
-        <div className="flex-1">
+        <div className="flex-1 min-h-0">
           <QuestBoard />
         </div>
       </div>
