@@ -127,7 +127,7 @@ export default function QuestBoard() {
 
   return (
     <motion.div
-      className="grid grid-rows-[0.88fr_1fr_1fr_1fr] gap-4 xl:gap-5 h-full min-h-0"
+      className="grid grid-rows-4 gap-4 xl:gap-5 h-full min-h-0"
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
