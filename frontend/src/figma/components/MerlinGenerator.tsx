@@ -260,7 +260,7 @@ export default function MerlinGenerator() {
 
   return (
     <motion.div
-      className="glass-panel rounded-[32px] p-8 flex flex-col h-full relative overflow-hidden"
+      className="glass-panel rounded-[32px] p-7 xl:p-8 flex flex-col h-full relative overflow-hidden"
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6 }}
@@ -287,7 +287,7 @@ export default function MerlinGenerator() {
         ))}
       </div>
 
-      <div className="flex flex-col items-center gap-4 z-10">
+      <div className="flex flex-col items-center gap-3.5 z-10">
         <motion.div
           className="relative"
           animate={{
@@ -348,7 +348,7 @@ export default function MerlinGenerator() {
         </motion.div>
       </div>
 
-      <div className="flex-1 flex flex-col justify-center gap-4 z-10 mt-4 px-2">
+      <div className="flex-1 flex flex-col justify-center gap-3.5 z-10 mt-3 px-2">
         <motion.div
           className="relative"
           initial={{ opacity: 0, y: 20 }}
@@ -365,7 +365,7 @@ export default function MerlinGenerator() {
               handleGenerate();
             }}
             placeholder="例如：请生成 8 道语法题，考点是虚拟语气，难度 3，四选一，答案用 A/B/C/D。"
-            className="w-full h-28 glass-panel rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50 transition-colors placeholder:text-[var(--muted-foreground)]/50"
+            className="w-full h-24 xl:h-[6.5rem] glass-panel rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50 transition-colors placeholder:text-[var(--muted-foreground)]/50"
           />
 
           <div className="absolute bottom-3 right-4 text-xs text-[var(--muted-foreground)]/50">
@@ -376,7 +376,7 @@ export default function MerlinGenerator() {
         <motion.button
           onClick={handleGenerate}
           disabled={isGenerating || !inputText.trim()}
-          className="w-full py-4 rounded-2xl bg-gradient-to-r from-[var(--neon-gold)] to-[var(--emerald-green)] text-[var(--mystical-navy)] font-semibold text-lg flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+          className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-[var(--neon-gold)] to-[var(--emerald-green)] text-[var(--mystical-navy)] font-semibold text-lg flex items-center justify-center gap-3 relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.5 }}
