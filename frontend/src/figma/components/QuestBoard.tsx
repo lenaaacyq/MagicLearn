@@ -30,7 +30,7 @@ function QuestCard({
 
   return (
     <motion.div
-      className={`glass-panel rounded-3xl p-5 xl:p-6 h-full min-h-[132px] cursor-pointer relative overflow-hidden transition-all ${
+      className={`glass-panel rounded-3xl p-5 xl:p-6 h-full min-h-[128px] cursor-pointer relative overflow-hidden transition-all ${
         isLocked ? "grayscale opacity-50" : "hover:scale-[1.02]"
       }`}
       whileHover={!isLocked ? { y: -4 } : {}}
@@ -54,7 +54,7 @@ function QuestCard({
         />
       )}
 
-      <div className="relative z-10 h-full flex items-start gap-4">
+      <div className="relative z-10 h-full flex items-center gap-4">
         <div
           className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${
             isLocked ? "bg-white/5" : "glass-panel-gold"
@@ -66,30 +66,26 @@ function QuestCard({
           {isLocked ? <Lock className="w-6 h-6 text-gray-500" /> : icon}
         </div>
 
-        <div className="flex-1 min-w-0 h-full flex flex-col">
-          <div>
-            <h4
-              className="text-lg font-semibold mb-1.5"
-              style={{ fontFamily: "var(--font-serif)" }}
-            >
-              {title}
-            </h4>
-            <p className="text-sm text-[var(--muted-foreground)]">
-              {subtitle}
-            </p>
-          </div>
+        <div className="flex-1 min-w-0">
+          <h4
+            className="text-lg font-semibold mb-1.5"
+            style={{ fontFamily: "var(--font-serif)" }}
+          >
+            {title}
+          </h4>
+          <p className="text-sm text-[var(--muted-foreground)] mb-4">
+            {subtitle}
+          </p>
 
           {progress !== undefined && !isLocked && (
-            <div className="mt-auto pt-4">
-              <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-                <motion.div
-                  className="h-full rounded-full"
-                  style={{ background: glowColor }}
-                  initial={{ width: 0 }}
-                  animate={{ width: `${progress}%` }}
-                  transition={{ duration: 1, ease: "easeOut" }}
-                />
-              </div>
+            <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+              <motion.div
+                className="h-full rounded-full"
+                style={{ background: glowColor }}
+                initial={{ width: 0 }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 1, ease: "easeOut" }}
+              />
             </div>
           )}
         </div>
@@ -131,7 +127,7 @@ export default function QuestBoard() {
 
   return (
     <motion.div
-      className="grid grid-rows-4 gap-4 xl:gap-5 h-full min-h-0"
+      className="grid grid-rows-[0.88fr_1fr_1fr_1fr] gap-4 xl:gap-5 h-full min-h-0"
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
@@ -152,8 +148,8 @@ export default function QuestBoard() {
           </motion.div>
         </div>
 
-        <div className="relative z-10">
-          <h2 className="text-2xl mb-4 flex items-baseline gap-3" style={{ fontFamily: "var(--font-serif)" }}>
+        <div className="relative z-10 h-full flex flex-col justify-center">
+          <h2 className="text-2xl mb-3 flex items-baseline gap-3" style={{ fontFamily: "var(--font-serif)" }}>
             <span>Learn with Your Own Magic</span>
           </h2>
 

@@ -260,7 +260,7 @@ export default function MerlinGenerator() {
 
   return (
     <motion.div
-      className="glass-panel rounded-[32px] p-7 xl:p-8 flex flex-col h-full relative overflow-hidden"
+      className="glass-panel rounded-[32px] p-6 xl:p-7 flex flex-col h-full relative overflow-hidden"
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6 }}
