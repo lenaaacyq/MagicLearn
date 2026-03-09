@@ -30,7 +30,7 @@ function QuestCard({
 
   return (
     <motion.div
-      className={`glass-panel rounded-3xl p-5 xl:p-6 flex-1 min-h-[132px] cursor-pointer relative overflow-hidden transition-all ${
+      className={`glass-panel rounded-3xl p-5 xl:p-6 h-full min-h-[132px] cursor-pointer relative overflow-hidden transition-all ${
         isLocked ? "grayscale opacity-50" : "hover:scale-[1.02]"
       }`}
       whileHover={!isLocked ? { y: -4 } : {}}
@@ -54,9 +54,9 @@ function QuestCard({
         />
       )}
 
-      <div className="relative z-10 flex items-center gap-4">
+      <div className="relative z-10 h-full flex items-start gap-4">
         <div
-          className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 -translate-y-1 ${
+          className={`w-14 h-14 rounded-2xl flex items-center justify-center flex-shrink-0 ${
             isLocked ? "bg-white/5" : "glass-panel-gold"
           }`}
           style={{
@@ -66,26 +66,30 @@ function QuestCard({
           {isLocked ? <Lock className="w-6 h-6 text-gray-500" /> : icon}
         </div>
 
-        <div className="flex-1 min-w-0">
-          <h4
-            className="text-lg font-semibold mb-1.5"
-            style={{ fontFamily: "var(--font-serif)" }}
-          >
-            {title}
-          </h4>
-          <p className="text-sm text-[var(--muted-foreground)] mb-3">
-            {subtitle}
-          </p>
+        <div className="flex-1 min-w-0 h-full flex flex-col">
+          <div>
+            <h4
+              className="text-lg font-semibold mb-1.5"
+              style={{ fontFamily: "var(--font-serif)" }}
+            >
+              {title}
+            </h4>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              {subtitle}
+            </p>
+          </div>
 
           {progress !== undefined && !isLocked && (
-            <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
-              <motion.div
-                className="h-full rounded-full"
-                style={{ background: glowColor }}
-                initial={{ width: 0 }}
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 1, ease: "easeOut" }}
-              />
+            <div className="mt-auto pt-4">
+              <div className="w-full h-2 bg-white/10 rounded-full overflow-hidden">
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{ background: glowColor }}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 1, ease: "easeOut" }}
+                />
+              </div>
             </div>
           )}
         </div>
@@ -127,12 +131,12 @@ export default function QuestBoard() {
 
   return (
     <motion.div
-      className="flex flex-col gap-5 h-full"
+      className="grid grid-rows-4 gap-4 xl:gap-5 h-full min-h-0"
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
     >
-      <div className="glass-panel-gold rounded-3xl p-5 xl:p-6 relative overflow-hidden">
+      <div className="glass-panel-gold rounded-3xl p-5 xl:p-6 h-full relative overflow-hidden">
         <div className="absolute top-4 right-4">
           <motion.div
             animate={{
@@ -171,37 +175,35 @@ export default function QuestBoard() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col gap-3.5 pr-1 min-h-0 overflow-hidden">
-        <QuestCard
-          title="魔法对话课"
-          subtitle="Magical Dialogue · Listening"
-          icon={<Volume2 className="w-6 h-6 text-[var(--mystical-purple)]" />}
-          status="active"
-          glowColor="var(--mystical-purple)"
-          progress={progress.listening}
-          onClick={() => handleQuestClick("listening")}
-        />
+      <QuestCard
+        title="魔法对话课"
+        subtitle="Magical Dialogue · Listening"
+        icon={<Volume2 className="w-6 h-6 text-[var(--mystical-purple)]" />}
+        status="active"
+        glowColor="var(--mystical-purple)"
+        progress={progress.listening}
+        onClick={() => handleQuestClick("listening")}
+      />
 
-        <QuestCard
-          title="咒语语法课"
-          subtitle="spell practice - Grammar"
-          icon={<Wand2 className="w-6 h-6 text-[var(--emerald-green)]" />}
-          status="progress"
-          glowColor="var(--emerald-green)"
-          progress={progress.grammar}
-          onClick={() => handleQuestClick("grammar")}
-        />
+      <QuestCard
+        title="咒语语法课"
+        subtitle="spell practice - Grammar"
+        icon={<Wand2 className="w-6 h-6 text-[var(--emerald-green)]" />}
+        status="progress"
+        glowColor="var(--emerald-green)"
+        progress={progress.grammar}
+        onClick={() => handleQuestClick("grammar")}
+      />
 
-        <QuestCard
-          title="古籍阅读课"
-          subtitle="Ancient Scroll · Reading"
-          icon={<BookOpen className="w-6 h-6 text-[var(--neon-gold)]" />}
-          status="progress"
-          glowColor="var(--neon-gold)"
-          progress={progress.reading}
-          onClick={() => handleQuestClick("reading")}
-        />
-      </div>
+      <QuestCard
+        title="古籍阅读课"
+        subtitle="Ancient Scroll · Reading"
+        icon={<BookOpen className="w-6 h-6 text-[var(--neon-gold)]" />}
+        status="progress"
+        glowColor="var(--neon-gold)"
+        progress={progress.reading}
+        onClick={() => handleQuestClick("reading")}
+      />
     </motion.div>
   );
 }
