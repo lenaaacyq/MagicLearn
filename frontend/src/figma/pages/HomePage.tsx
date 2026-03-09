@@ -30,14 +30,14 @@ export default function HomePage() {
       </motion.header>
 
       {/* 主内容区 - Bento 布局 */}
-      <div className="pt-24 pb-28 h-screen flex gap-5 xl:gap-6">
+      <div className="pt-28 pb-32 h-screen flex gap-6">
         {/* 左侧 - Agent 伴随舱 */}
-        <div className="w-[38%] 2xl:w-[37%]">
+        <div className="w-[40%]">
           <MerlinGenerator />
         </div>
 
         {/* 右侧 - 任务看板 */}
-        <div className="flex-1 min-w-0">
+        <div className="flex-1">
           <QuestBoard />
         </div>
       </div>
