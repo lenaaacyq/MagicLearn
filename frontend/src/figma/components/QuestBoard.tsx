@@ -15,6 +15,7 @@ interface QuestCardProps {
   glowColor: string;
   progress?: number;
   onClick?: () => void;
+  dataMarker?: string;
 }
 
 function QuestCard({
@@ -24,7 +25,8 @@ function QuestCard({
   status,
   glowColor,
   progress,
-  onClick
+  onClick,
+  dataMarker
 }: QuestCardProps) {
   const isLocked = status === "locked";
 
@@ -33,6 +35,7 @@ function QuestCard({
       className={`glass-panel rounded-3xl p-6 cursor-pointer relative overflow-hidden transition-all ${
         isLocked ? "grayscale opacity-50" : "hover:scale-[1.02]"
       }`}
+      data-marker={dataMarker}
       whileHover={!isLocked ? { y: -4 } : {}}
       onClick={!isLocked ? onClick : undefined}
       style={{
@@ -127,12 +130,12 @@ export default function QuestBoard() {
 
   return (
     <motion.div
-      className="flex flex-col gap-6 h-full"
+      className="flex flex-col h-full min-h-0"
       initial={{ opacity: 0, x: 50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6, delay: 0.2 }}
     >
-      <div className="glass-panel-gold rounded-3xl p-6 relative overflow-hidden">
+      <div className="glass-panel-gold rounded-3xl p-6 relative overflow-hidden mb-6">
         <div className="absolute top-4 right-4">
           <motion.div
             animate={{
@@ -171,7 +174,7 @@ export default function QuestBoard() {
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col gap-4 overflow-y-auto pr-2">
+      <div className="flex-1 min-h-0 flex flex-col gap-4">
         <QuestCard
           title="魔法对话课"
           subtitle="Magical Dialogue · Listening"
@@ -199,6 +202,7 @@ export default function QuestBoard() {
           status="progress"
           glowColor="var(--neon-gold)"
           progress={progress.reading}
+          dataMarker="quest-last"
           onClick={() => handleQuestClick("reading")}
         />
       </div>

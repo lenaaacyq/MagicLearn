@@ -1,5 +1,6 @@
 "use client";
 
+import { useLayoutEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { Settings } from "lucide-react";
 import MerlinGenerator from "../components/MerlinGenerator";
@@ -7,8 +8,27 @@ import QuestBoard from "../components/QuestBoard";
 import AIFeedbackBar from "../components/AIFeedbackBar";
 
 export default function HomePage() {
+  const leftPanelRef = useRef<HTMLDivElement | null>(null);
+
+  useLayoutEffect(() => {
+    const updateLeftHeight = () => {
+      const leftPanel = leftPanelRef.current;
+      const rightLast = document.querySelector('[data-marker="quest-last"]') as HTMLElement | null;
+      if (!leftPanel || !rightLast) return;
+      const leftTop = leftPanel.getBoundingClientRect().top;
+      const rightBottom = rightLast.getBoundingClientRect().bottom;
+      const nextHeight = Math.max(0, Math.round(rightBottom - leftTop));
+      leftPanel.style.height = `${nextHeight}px`;
+    };
+
+    const rafUpdate = () => requestAnimationFrame(updateLeftHeight);
+    rafUpdate();
+    window.addEventListener("resize", rafUpdate);
+    return () => window.removeEventListener("resize", rafUpdate);
+  }, []);
+
   return (
-    <div className="min-h-screen p-8 relative overflow-hidden">
+    <div className="h-screen p-8 relative overflow-hidden flex flex-col">
       {/* 顶部导航 */}
       <motion.header 
         className="absolute top-8 left-8 right-8 flex items-center justify-between z-10"
@@ -30,9 +50,9 @@ export default function HomePage() {
       </motion.header>
 
       {/* 主内容区 - Bento 布局 */}
-      <div className="pt-28 pb-32 h-screen flex gap-6">
+      <div className="pt-28 pb-32 flex-1 min-h-0 flex gap-6 items-start">
         {/* 左侧 - Agent 伴随舱 */}
-        <div className="w-[40%] min-h-0">
+        <div className="w-[40%] min-h-0" ref={leftPanelRef}>
           <MerlinGenerator />
         </div>
 
