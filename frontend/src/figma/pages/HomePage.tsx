@@ -50,7 +50,7 @@ export default function HomePage() {
       </motion.header>
 
       {/* 主内容区 - Bento 布局 */}
-      <div className="pt-28 pb-32 mt-1.5 flex-1 min-h-0 flex gap-6 items-start">
+      <div className="pt-28 pb-32 mt-[11px] flex-1 min-h-0 flex gap-6 items-start">
         {/* 左侧 - Agent 伴随舱 */}
         <div className="w-[40%] min-h-0" ref={leftPanelRef}>
           <MerlinGenerator />
