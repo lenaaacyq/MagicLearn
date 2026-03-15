@@ -260,7 +260,7 @@ export default function MerlinGenerator() {
 
   return (
     <motion.div
-      className="glass-panel rounded-[32px] p-8 flex flex-col h-full relative overflow-hidden"
+      className="glass-panel rounded-[32px] p-8 flex flex-col relative overflow-hidden"
       initial={{ opacity: 0, x: -50 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ duration: 0.6 }}
@@ -365,7 +365,7 @@ export default function MerlinGenerator() {
               handleGenerate();
             }}
             placeholder="例如：请生成 8 道语法题，考点是虚拟语气，难度 3，四选一，答案用 A/B/C/D。"
-            className="w-full h-32 xl:h-36 glass-panel rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50 transition-colors placeholder:text-[var(--muted-foreground)]/50"
+            className="w-full h-28 xl:h-32 glass-panel rounded-2xl px-4 py-3 text-sm resize-none focus:outline-none focus:ring-2 focus:ring-[var(--neon-gold)]/50 transition-colors placeholder:text-[var(--muted-foreground)]/50"
           />
 
           <div className="absolute bottom-3 right-4 text-xs text-[var(--muted-foreground)]/50">
